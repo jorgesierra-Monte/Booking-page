@@ -1,0 +1,89 @@
+:root {
+  /* Label-float motion — matches text-input-outlined default (160ms, entrance easing) */
+  --float-duration: 160ms;
+  --float-ease: cubic-bezier(0, 0, 0.38, 0.9);
+
+  /* ---- Brand tokens (Arc, client mode) ---- */
+  /* Base palette */
+  --neo-0: #ffffff;
+  --neo-100: #c6c7c7;
+  --neo-300: #5f5f60;
+  --neo-400: #313132;
+  --neo-500: #010204;
+  --ziggy-500: #4c1d44;
+  --frodo-500: #4a412d;
+  --frodo-700: #2e291e;
+  --wilson-150: #f7f5f4;
+  --wilson-250: #f1efec;
+  --wilson-350: #ebe8e5;
+  --wilson-400: #e8e5e1;
+  --wilson-450: #e6e2de;
+  --wilson-500: #e3dfda;
+  --wilson-550: #e6e2de;
+  --wilson-700: #817f7d;
+  --wilson-850: #403f3e;
+  --kareem-500: #ad802b;
+  --lasso-500: #ff5e48;
+  --sproutie-500: #28c266;
+
+  /* Semantic — client mode */
+  --surface-default: var(--neo-0);
+  --surface-emphasis: var(--wilson-450);
+  --surface-inverse: var(--neo-500);
+  --surface-inverse-emphasis: var(--neo-400);
+  --surface-brand: var(--ziggy-500);
+  --surface-hover-default: var(--wilson-250);
+  --surface-hover-emphasis: var(--wilson-350);
+  --surface-pressed: var(--wilson-400);
+  --surface-inactive: var(--wilson-150);
+  --surface-selected-brand: var(--wilson-250);
+
+  --text-default: var(--neo-500);
+  --text-muted: var(--neo-300);
+  --text-inverse: var(--neo-0);
+  --text-inverse-muted: var(--neo-100);
+  --text-brand: var(--ziggy-500);
+
+  --border-default: var(--wilson-700);
+  --border-subtle: var(--wilson-550);
+  --border-hover: var(--neo-300);
+  --border-strong: var(--neo-500);
+  --border-inactive: var(--wilson-500);
+  --border-selected-default: var(--frodo-500);
+  --border-selected-emphasis: var(--frodo-700);
+
+  --error: var(--lasso-500);
+  --success: var(--sproutie-500);
+
+  /* Radii */
+  --radius-xsmall: 4px;
+  --radius-small: 8px;
+  --radius-medium: 12px;
+  --radius-full: 19998px;
+
+  /* Border widths */
+  --border-thin: 1.25px;
+  --border-thick: 2px;
+
+  /* Fonts */
+  --font-season: 'Season VF', system-ui, -apple-system, sans-serif;
+  --font-season-sans: 'Season Sans VF', 'Season VF', system-ui, sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-season);
+  background: var(--surface-default);
+  color: var(--text-default);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100svh;
+}

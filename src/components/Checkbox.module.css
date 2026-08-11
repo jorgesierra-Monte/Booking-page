@@ -1,0 +1,65 @@
+.wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Visually-hidden native checkbox keeps keyboard + a11y semantics */
+.native {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+
+.box {
+  flex-shrink: 0;
+  margin-top: 4px; /* aligns box with the first line of body text */
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-xsmall);
+  border: var(--border-thin) solid var(--border-default);
+  background: var(--surface-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-inverse);
+  transition: background-color 120ms ease-out, border-color 120ms ease-out;
+}
+
+.wrapper:hover .box {
+  border-color: var(--border-hover);
+}
+
+.checked {
+  background: var(--surface-inverse);
+  border-color: var(--surface-inverse);
+}
+
+.check {
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 120ms ease-out, transform 160ms var(--float-ease);
+}
+
+.checked .check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Keyboard focus ring on the box */
+.native:focus-visible + .box {
+  box-shadow: 0 0 0 2px var(--surface-default), 0 0 0 4px var(--border-strong);
+}
+
+.label {
+  font-family: var(--font-season-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.3px;
+  color: var(--text-default);
+}

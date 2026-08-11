@@ -1,0 +1,112 @@
+.calendar {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  margin-bottom: 16px;
+}
+
+.navBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  color: var(--text-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 120ms ease-out;
+}
+
+.navBtn:hover:not(:disabled) {
+  background: var(--surface-hover-default);
+}
+
+.navBtn:disabled {
+  color: var(--wilson-500);
+  cursor: not-allowed;
+}
+
+.title {
+  font-family: var(--font-season-sans);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: var(--text-default);
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+}
+
+.weekday {
+  text-align: center;
+  font-family: var(--font-season-sans);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-muted);
+  padding: 8px 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 8px;
+}
+
+.cellWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  font-family: var(--font-season-sans);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-default);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 120ms ease-out, color 120ms ease-out;
+}
+
+.day:hover:not(:disabled):not(.selected) {
+  background: var(--surface-hover-default);
+}
+
+.day:active:not(:disabled) {
+  background: var(--surface-pressed);
+}
+
+.day:disabled {
+  color: var(--wilson-500);
+  cursor: default;
+}
+
+.outside {
+  visibility: hidden;
+}
+
+.selected {
+  background: var(--surface-inverse);
+  color: var(--text-inverse);
+}
+
+.selected:hover {
+  background: var(--surface-inverse);
+}

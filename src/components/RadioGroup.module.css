@@ -1,0 +1,97 @@
+.group {
+  display: grid;
+  gap: 24px;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius-small);
+  border: var(--border-thin) solid var(--border-default);
+  background: var(--surface-default);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 150ms ease-out, background-color 150ms ease-out;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+}
+
+.selected {
+  background: var(--surface-selected-brand);
+  border: var(--border-thick) solid var(--border-selected-default);
+  /* compensate the +0.75px border growth so the card doesn't shift */
+  padding: 15px;
+}
+
+.card:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--surface-default), 0 0 0 4px var(--border-strong);
+}
+
+.text {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  font-family: var(--font-season-sans);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  color: var(--text-default);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.description {
+  font-family: var(--font-season-sans);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-muted);
+}
+
+/* Radio dot */
+.radio {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border-default);
+  background: var(--surface-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.selected .radio {
+  border-color: var(--surface-inverse);
+  background: var(--surface-inverse);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--surface-default);
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 150ms ease-out, transform 160ms var(--float-ease);
+}
+
+.selected .dot {
+  opacity: 1;
+  transform: scale(1);
+}

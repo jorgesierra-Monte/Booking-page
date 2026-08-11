@@ -1,0 +1,31 @@
+.subhead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title {
+  font-family: var(--font-season-sans);
+  font-size: 24px;
+  font-weight: 550;
+  line-height: 29px;
+  letter-spacing: -0.25px;
+  color: var(--text-default);
+  margin: 0;
+}
+
+.info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background: var(--surface-inverse);
+  color: var(--text-inverse);
+  font-family: var(--font-season-sans);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: default;
+}

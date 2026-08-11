@@ -1,0 +1,58 @@
+.panel {
+  width: 100%;
+}
+
+.dateHeader {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-season-sans);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: var(--text-default);
+  margin-bottom: 30px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.slot {
+  width: 100%;
+  min-height: 54px;
+  padding: 16px;
+  border-radius: var(--radius-small);
+  border: 1px solid var(--border-subtle);
+  background: var(--wilson-150);
+  font-family: var(--font-season);
+  font-size: 16px;
+  font-weight: 550;
+  letter-spacing: 0;
+  color: var(--text-default);
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.slot:hover:not(.selected) {
+  background: var(--surface-hover-default);
+  border-color: var(--border-hover);
+}
+
+.slot:active:not(.selected) {
+  background: var(--surface-pressed);
+}
+
+.selected {
+  background: var(--surface-selected-brand);
+  border: var(--border-thick) solid var(--border-selected-default);
+  padding: 15px;
+}
+
+.slot:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--surface-default), 0 0 0 4px var(--border-strong);
+}
