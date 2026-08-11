@@ -26,7 +26,7 @@
   padding: 16px;
   border-radius: var(--radius-small);
   border: 1px solid var(--border-subtle);
-  background: var(--wilson-150);
+  background: var(--surface-default); /* Default: white fill + #e6e2de border */
   font-family: var(--font-season);
   font-size: 16px;
   font-weight: 550;
@@ -38,18 +38,17 @@
 }
 
 .slot:hover:not(.selected) {
-  background: var(--surface-hover-default);
-  border-color: var(--border-hover);
+  border-color: var(--border-default); /* darken border on hover, keep white fill */
 }
 
 .slot:active:not(.selected) {
   background: var(--surface-pressed);
 }
 
+/* Selected: warm tint fill (#f6f4f2) + subtle border, per Button-Selector spec */
 .selected {
-  background: var(--surface-selected-brand);
-  border: var(--border-thick) solid var(--border-selected-default);
-  padding: 15px;
+  background: #f6f4f2;
+  border-color: var(--border-subtle);
 }
 
 .slot:focus-visible {
