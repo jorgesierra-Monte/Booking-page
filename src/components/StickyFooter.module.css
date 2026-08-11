@@ -12,7 +12,7 @@
      page the frost alone is invisible, so a hairline + soft lift shadow give
      the bar a readable surface — the separation the design gets from content
      scrolling under it. */
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
   border-top: 1px solid var(--border-subtle);
