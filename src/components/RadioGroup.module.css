@@ -18,8 +18,14 @@
   transition: border-color 150ms ease-out, background-color 150ms ease-out;
 }
 
-.card:hover {
-  border-color: var(--border-hover);
+/* Hover (State=Hover): light fill + dark border, weight unchanged at 1.25px */
+.card:hover:not(.selected):not(:disabled) {
+  background: var(--surface-hover-default); /* #f1efec */
+  border-color: var(--wilson-850);          /* #403f3e */
+}
+
+.card:hover:not(.selected):not(:disabled) .radio {
+  border-color: var(--wilson-850);
 }
 
 .selected {
@@ -28,6 +34,16 @@
   /* compensate the +0.75px border growth so the card doesn't shift */
   padding: 15px;
 }
+
+/* Disabled (State=Disabled) */
+.card:disabled {
+  background: var(--surface-inactive);      /* #f7f5f4 */
+  border-color: var(--border-inactive);     /* #e3dfda */
+  cursor: not-allowed;
+}
+
+.card:disabled .title { color: var(--text-muted); }
+.card:disabled .radio { border-color: var(--border-inactive); }
 
 .card:focus-visible {
   outline: none;
