@@ -1,3 +1,19 @@
+/* Bundled brand variable fonts so the deployed URL renders correctly everywhere */
+@font-face {
+  font-family: 'Season VF';
+  src: url('/fonts/SeasonCollectionVF.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Season Sans VF';
+  src: url('/fonts/SeasonSansVF.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Label-float motion — matches text-input-outlined default (160ms, entrance easing) */
   --float-duration: 160ms;
