@@ -14,6 +14,10 @@
   font-display: swap;
 }
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   /* Label-float motion — matches text-input-outlined default (160ms, entrance easing) */
   --float-duration: 160ms;
@@ -70,6 +74,19 @@
 
   --error: var(--lasso-500);
   --success: var(--sproutie-500);
+
+  /* ---- arc/live semantic additions (booking page) ---- */
+  --surface-subtle: #f4f2f0;
+  --surface-state-inactive-emphasis: var(--wilson-500); /* progress-bar empty */
+  --action-primary-surface: var(--neo-500);   /* near-black */
+  --action-primary-text: var(--neo-0);
+  --action-primary-hover: #555452;
+  --action-primary-pressed: var(--wilson-700);
+  --action-secondary-surface: var(--neo-0);
+  --action-secondary-border: var(--neo-500);
+  --action-secondary-text: var(--neo-500);
+  --status-success-text: #152819;
+  --progress-active: #9c6b93; /* light plum, in-view progress segment */
 
   /* Radii */
   --radius-xsmall: 4px;

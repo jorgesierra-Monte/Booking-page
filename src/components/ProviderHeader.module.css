@@ -64,6 +64,28 @@
   color: var(--text-inverse);
 }
 
+.viewProfile {
+  font-family: var(--font-season-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.35px;
+  color: var(--text-inverse);
+  text-decoration: underline;
+  text-underline-position: from-font;
+  cursor: pointer;
+}
+
+.accepting {
+  font-family: var(--font-season-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
 .price {
   display: flex;
   flex-direction: column;

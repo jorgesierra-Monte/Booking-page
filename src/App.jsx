@@ -3,7 +3,7 @@ import './App.css'
 
 import Nav from './components/Nav'
 import ProviderHeader from './components/ProviderHeader'
-import PromoBanner from './components/PromoBanner'
+import BookWithConfidence from './components/BookWithConfidence'
 import SectionSubhead from './components/SectionSubhead'
 import RadioGroup from './components/RadioGroup'
 import Calendar from './components/Calendar'
@@ -15,6 +15,7 @@ import InputField from './InputField'
 import MaskedInputField, { PHONE_CONFIG, DATE_CONFIG } from './MaskedInputField'
 import SelectField from './SelectField'
 
+const RELATIONSHIP_OPTIONS = ['Myself', 'My child', 'My spouse or partner', 'Someone else']
 const INSURANCE_OPTIONS = [
   'Aetna', 'Blue Cross Blue Shield', 'Cigna', 'Humana', 'United Healthcare',
   'Kaiser Permanente', 'Anthem', 'Oscar Health', 'Ambetter', 'Other',
@@ -27,6 +28,7 @@ const SHORT_WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 const AVAILABLE_FROM = new Date(2023, 1, 1) // Feb 1, 2023
+const PROVIDER_ADDRESS = '1535 E Olive Ave, Fresno, CA 93728'
 
 function slotStart(slot) {
   // "9:00 am – 9:45 am CST" -> "9:00 AM CST"
@@ -35,17 +37,20 @@ function slotStart(slot) {
 }
 
 export default function App() {
-  const [appointmentType, setAppointmentType] = useState('virtual')
+  const [appointmentType, setAppointmentType] = useState('in-person')
   const [billingType, setBillingType] = useState('insurance')
   const [selectedDate, setSelectedDate] = useState(new Date(2023, 1, 7))
   const [selectedTime, setSelectedTime] = useState(TIME_SLOTS[0])
-  const [agreed, setAgreed] = useState(false)
+  const [estimated, setEstimated] = useState(false)
+  const [agreements, setAgreements] = useState({ terms: false, hipaa: false, consent: false })
 
   const apptLabel = appointmentType === 'virtual' ? 'Virtual' : 'In person'
 
   const schedule = selectedDate && selectedTime
     ? `${SHORT_WEEKDAYS[selectedDate.getDay()]}, ${SHORT_MONTHS[selectedDate.getMonth()]} ${selectedDate.getDate()} at ${slotStart(selectedTime)}`
     : 'Select a day and time'
+
+  const toggleAgreement = key => setAgreements(a => ({ ...a, [key]: !a[key] }))
 
   return (
     <div className="app">
@@ -57,6 +62,7 @@ export default function App() {
         {/* Select a day and time */}
         <section className="section">
           <SectionSubhead>Select a day and time</SectionSubhead>
+          <p className="locationLine">{PROVIDER_ADDRESS}</p>
           <RadioGroup
             name="appointment-type"
             options={[{ value: 'virtual', label: 'Virtual' }, { value: 'in-person', label: 'In person' }]}
@@ -73,22 +79,18 @@ export default function App() {
           </div>
         </section>
 
-        <PromoBanner
-          variant="brown"
-          image="/banner-worryfree.png"
-          header="Worry-free booking"
-          description="It's free to cancel your virtual or in-person appointment up to 24 hours before the appointment begins for any reason."
-          linkLabel="Learn more"
-        />
+        {/* Book with confidence */}
+        <BookWithConfidence />
 
         {/* Client information */}
         <section className="section">
           <SectionSubhead>Client information</SectionSubhead>
           <div className="twoCol formGrid">
             <div className="col">
-              <SelectField label="Select insurance" options={INSURANCE_OPTIONS} />
+              <SelectField label="Relationship to client" options={RELATIONSHIP_OPTIONS} />
               <InputField label="First name *" />
               <InputField label="Last name *" />
+              <InputField label="Chosen name (optional)" />
               <InputField label="Email *" />
             </div>
             <div className="col">
@@ -127,20 +129,24 @@ export default function App() {
             <SelectField label="Insurance name" options={INSURANCE_OPTIONS} />
             <InputField label="Member ID*" />
           </div>
-          <PromoBanner
-            variant="gold"
-            image="/banner-covered.png"
-            header="Am I covered?"
-            description="By submitting this form, you agree to Grow Therapy's Terms of Service and Privacy Policy."
-            linkLabel="Learn more"
-          />
+          {estimated ? (
+            <div className="costEstimate">
+              <p className="costEstimateLabel">Estimated cost per session</p>
+              <p className="costEstimateValue">$0 – $35</p>
+              <p className="costEstimateNote">On average, Aetna clients pay $0 – $35 per session.</p>
+            </div>
+          ) : (
+            <button type="button" className="verifyButton" onClick={() => setEstimated(true)}>
+              Verify &amp; estimate cost
+            </button>
+          )}
         </section>
 
         {/* Billing information */}
         <section className="section">
           <SectionSubhead>Billing information</SectionSubhead>
           <div className="col">
-            <InputField label="Member ID*" />
+            <InputField label="Card number*" />
             <p className="helper">
               By providing your card information, you allow Grow Therapy to charge your card for
               future payments in accordance with their terms.
@@ -153,9 +159,14 @@ export default function App() {
         {/* Agreements */}
         <section className="section agreements">
           <SectionSubhead>Agreements</SectionSubhead>
-          <Checkbox id="agree" checked={agreed} onChange={setAgreed}>
-            I have reviewed and accept Grow Therapy's HIPPA Notice of Privacy Practice, Terms of
-            Service, and Website Privacy Policy.*
+          <Checkbox id="agree-terms" checked={agreements.terms} onChange={() => toggleAgreement('terms')}>
+            I have reviewed and accept Grow Therapy's Terms of Service and Website Privacy Policy.*
+          </Checkbox>
+          <Checkbox id="agree-hipaa" checked={agreements.hipaa} onChange={() => toggleAgreement('hipaa')}>
+            I have reviewed and accept Grow Therapy's HIPAA Notice of Privacy Practices.*
+          </Checkbox>
+          <Checkbox id="agree-consent" checked={agreements.consent} onChange={() => toggleAgreement('consent')}>
+            I consent to receive treatment and services from my provider.*
           </Checkbox>
           <a href="#" className="textLink">Read more</a>
         </section>
@@ -163,7 +174,7 @@ export default function App() {
 
       <StickyFooter
         price="$144"
-        meta={`45 min • ${apptLabel}`}
+        meta={`60 min • ${apptLabel} • ${PROVIDER_ADDRESS}`}
         schedule={schedule}
         disabled={!selectedDate || !selectedTime}
       />

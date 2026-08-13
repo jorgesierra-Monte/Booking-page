@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import styles from './Calendar.module.css'
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December']
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+
+const cx = (...c) => c.filter(Boolean).join(' ')
 
 function sameDay(a, b) {
   return a && b && a.getFullYear() === b.getFullYear() &&
@@ -24,8 +25,24 @@ function buildGrid(viewDate) {
   return cells
 }
 
+function Chevron({ dir }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d={dir === 'prev' ? 'M10 3.5L5.5 8L10 12.5' : 'M6 3.5L10.5 8L6 12.5'}
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 export default function Calendar({ selected, onSelect, availableFrom }) {
-  const [view, setView] = useState(() => new Date((selected ?? availableFrom).getFullYear(), (selected ?? availableFrom).getMonth(), 1))
+  const [view, setView] = useState(
+    () => new Date((selected ?? availableFrom).getFullYear(), (selected ?? availableFrom).getMonth(), 1),
+  )
 
   const grid = buildGrid(view)
 
@@ -33,7 +50,6 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
     setView(v => new Date(v.getFullYear(), v.getMonth() + delta, 1))
   }
 
-  // A day is bookable if it's in the displayed month and not before availableFrom
   function isAvailable(cell) {
     if (!cell.inMonth) return false
     const d0 = new Date(cell.date.getFullYear(), cell.date.getMonth(), cell.date.getDate())
@@ -45,47 +61,50 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
     view.getFullYear() > availableFrom.getFullYear() ||
     (view.getFullYear() === availableFrom.getFullYear() && view.getMonth() > availableFrom.getMonth())
 
+  const navBtn =
+    'flex h-8 w-8 items-center justify-center rounded-rounded text-text-default transition hover:bg-surface-hover-default disabled:opacity-30 disabled:hover:bg-transparent'
+
   return (
-    <div className={styles.calendar}>
-      <div className={styles.header}>
-        <button
-          type="button"
-          className={styles.navBtn}
-          onClick={() => step(-1)}
-          disabled={!canGoPrev}
-          aria-label="Previous month"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M10 3.5L5.5 8L10 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+    <div className="w-full select-none">
+      <div className="mb-200 flex items-center justify-between">
+        <button type="button" className={navBtn} onClick={() => step(-1)} disabled={!canGoPrev} aria-label="Previous month">
+          <Chevron dir="prev" />
         </button>
-        <span className={styles.title}>{MONTHS[view.getMonth()]} {view.getFullYear()}</span>
-        <button type="button" className={styles.navBtn} onClick={() => step(1)} aria-label="Next month">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M6 3.5L10.5 8L6 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+        <span className="typography-label-emphasis-default">
+          {MONTHS[view.getMonth()]} {view.getFullYear()}
+        </span>
+        <button type="button" className={navBtn} onClick={() => step(1)} aria-label="Next month">
+          <Chevron dir="next" />
         </button>
       </div>
 
-      <div className={styles.weekdays}>
-        {WEEKDAYS.map(w => <span key={w} className={styles.weekday}>{w}</span>)}
+      <div className="grid grid-cols-7">
+        {WEEKDAYS.map((w, i) => (
+          <span key={i} className="flex h-9 items-center justify-center typography-label-small text-text-muted">
+            {w}
+          </span>
+        ))}
       </div>
 
-      <div className={styles.grid}>
+      <div className="grid grid-cols-7 gap-y-100">
         {grid.map((cell, i) => {
+          if (!cell.inMonth) return <span key={i} />
           const available = isAvailable(cell)
           const isSelected = sameDay(cell.date, selected)
           return (
-            <div key={i} className={styles.cellWrap}>
+            <div key={i} className="flex items-center justify-center">
               <button
                 type="button"
-                className={[
-                  styles.day,
-                  isSelected ? styles.selected : '',
-                  !cell.inMonth ? styles.outside : '',
-                ].join(' ')}
                 disabled={!available}
                 onClick={() => available && onSelect(cell.date)}
+                className={cx(
+                  'flex h-11 w-11 items-center justify-center rounded-small typography-label-default transition',
+                  isSelected
+                    ? 'bg-surface-state-selected-brand text-text-default ring-2 ring-inset ring-border-state-selected-default'
+                    : available
+                      ? 'text-text-default hover:bg-surface-hover-default active:bg-[#cac6c2]'
+                      : 'text-text-muted opacity-50',
+                )}
               >
                 {cell.date.getDate()}
               </button>

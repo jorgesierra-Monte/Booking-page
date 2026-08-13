@@ -8,14 +8,16 @@ export default function ProviderHeader() {
       </div>
 
       <div className={styles.info}>
-        <span className={styles.tag}>New to Grow</span>
+        <span className={styles.tag}>✓ Grow Verified</span>
         <h1 className={styles.name}>Daunte<br />Henderson</h1>
         <span className={styles.pronouns}>(he/him)</span>
+        <a href="#" className={styles.viewProfile}>View profile</a>
       </div>
 
       <div className={styles.price}>
+        <span className={styles.accepting}>Accepting Aetna</span>
         <span className={styles.amount}>$144</span>
-        <span className={styles.session}>30 minute session</span>
+        <span className={styles.session}>60 minute session</span>
       </div>
     </div>
   )

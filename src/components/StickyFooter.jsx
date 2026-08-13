@@ -11,7 +11,7 @@ export default function StickyFooter({ price, meta, schedule, disabled }) {
         <span className={styles.schedule}>{schedule}</span>
       </div>
       <button type="button" className={styles.book} disabled={disabled}>
-        Book session
+        Book now
       </button>
     </div>
   )

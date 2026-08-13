@@ -1,8 +1,8 @@
-import styles from './TimeSlots.module.css'
-
 const WEEKDAYS_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 const MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December']
+
+const cx = (...c) => c.filter(Boolean).join(' ')
 
 export const TIME_SLOTS = [
   '9:00 am – 9:45 am CST',
@@ -18,19 +18,29 @@ export default function TimeSlots({ date, selected, onSelect }) {
     : 'Select a day'
 
   return (
-    <div className={styles.panel}>
-      <div className={styles.dateHeader}>{heading}</div>
-      <div className={styles.buttons}>
-        {TIME_SLOTS.map(slot => (
-          <button
-            key={slot}
-            type="button"
-            className={[styles.slot, selected === slot ? styles.selected : ''].join(' ')}
-            onClick={() => onSelect(slot)}
-          >
-            {slot}
-          </button>
-        ))}
+    <div className="w-full">
+      <div className="mb-200 flex h-8 items-center justify-center text-center typography-label-emphasis-default text-text-default">
+        {heading}
+      </div>
+      <div className="flex flex-col gap-150">
+        {TIME_SLOTS.map(slot => {
+          const isSelected = selected === slot
+          return (
+            <button
+              key={slot}
+              type="button"
+              onClick={() => onSelect(slot)}
+              className={cx(
+                'flex min-h-component-mediumButtons w-full items-center justify-center rounded-small bg-surface-default px-400 typography-label-emphasis-default text-text-default transition',
+                isSelected
+                  ? 'ring-2 ring-inset ring-border-state-selected-default bg-surface-state-selected-brand'
+                  : 'ring-[1.25px] ring-inset ring-border-default hover:bg-surface-hover-default active:bg-[#cac6c2]',
+              )}
+            >
+              {slot}
+            </button>
+          )
+        })}
       </div>
     </div>
   )
