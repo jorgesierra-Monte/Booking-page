@@ -31,8 +31,8 @@ const ADDRESS_OPTIONS = ['123 Market St', '456 Elm Ave', '789 Oak Blvd', 'Enter 
 /* ---------------- Section title (FormSectionTitle) ---------------- */
 export function SectionTitle({ children, display, subhead, headerContent }) {
   return (
-    <div className="mb-350 flex w-full items-start justify-between gap-4">
-      <div className="flex flex-col gap-100">
+    <div className="mb-350 flex w-full items-center justify-between gap-4">
+      <div className="flex min-w-0 flex-col gap-100">
         <h2 className={display ? 'typography-display-small' : 'typography-subhead-serif-default'}>{children}</h2>
         {subhead && <p className="typography-label-default text-text-muted">{subhead}</p>}
       </div>
@@ -45,22 +45,31 @@ export function SectionTitle({ children, display, subhead, headerContent }) {
 export function DateTimeSection({ state, set }) {
   return (
     <section aria-label="Select a day and time">
-      <SectionTitle display subhead={state.address}>
+      <SectionTitle
+        display
+        headerContent={
+          state.appointmentType === 'in-person' ? (
+            <p className="typography-label-default shrink-0 text-right text-text-muted">{state.address}</p>
+          ) : null
+        }
+      >
         Select a day and time
       </SectionTitle>
       <RadioTiles
         name="appointment-type"
         columns={2}
+        gap="gap-450"
         value={state.appointmentType}
         onChange={v => set({ appointmentType: v })}
         options={[
           { value: 'virtual', label: 'Virtual' },
           { value: 'in-person', label: 'In person' },
         ]}
-        className="mb-350"
+        className="mb-550"
       />
-      <div className="flex flex-col gap-350 sm:flex-row sm:gap-x-200">
+      <div className="flex flex-col gap-350 sm:flex-row sm:gap-x-450">
         <div className="sm:min-w-0 sm:flex-1">
+          <p className="mb-250 typography-label-emphasis-default text-text-default">Select a day *</p>
           <Calendar
             selected={state.date}
             onSelect={d => set({ date: d, time: null })}
@@ -68,6 +77,7 @@ export function DateTimeSection({ state, set }) {
           />
         </div>
         <div className="sm:min-w-0 sm:flex-1">
+          <p className="mb-250 typography-label-emphasis-default text-text-default">Select a time *</p>
           <TimeSlots date={state.date} selected={state.time} onSelect={t => set({ time: t })} />
         </div>
       </div>
@@ -84,7 +94,7 @@ export function CancellationSection() {
   ]
   return (
     <section aria-label="Book with confidence" className="flex flex-col gap-250">
-      <div className="flex flex-col items-center gap-350 rounded-325-350 bg-surface-hover-default p-350 sm:flex-row sm:items-center sm:p-450">
+      <div className="flex flex-col items-center gap-350 rounded-medium bg-surface-hover-default p-350 sm:flex-row sm:items-center sm:p-450">
         <div className="flex size-[96px] shrink-0 items-center justify-center rounded-rounded bg-surface-brand text-text-inverse">
           <Check className="h-10 w-10" />
         </div>
@@ -150,16 +160,10 @@ export function ClientDetailsSection() {
           <AddMoreLink label="Add Apartment # or Suite (optional)">
             <TextField label="Apartment # or Suite" placeholder="Address Line 2" />
           </AddMoreLink>
-          <div className="flex flex-col gap-350 sm:flex-row">
-            <div className="flex-1">
-              <TextField label="City" required />
-            </div>
-            <div className="flex-1">
-              <SelectField label="State" options={STATE_OPTIONS} required />
-            </div>
-            <div className="flex-1">
-              <TextField label="Zip code" required />
-            </div>
+          <div className="flex flex-col gap-350">
+            <TextField label="City" required />
+            <SelectField label="State" options={STATE_OPTIONS} required />
+            <TextField label="Zip code" required />
           </div>
         </div>
       </div>
@@ -170,42 +174,45 @@ export function ClientDetailsSection() {
 /* ================= 4. Cost estimate ================= */
 export function CostEstimateSection({ state, set }) {
   return (
-    <section aria-label="Insurance options" className="flex flex-col gap-550">
+    <section aria-label="Coverage costs" className="flex flex-col gap-550">
       {/* Payment options */}
       <div className="flex flex-col gap-350">
-        <SectionTitle>Insurance options</SectionTitle>
+        <SectionTitle>Coverage costs</SectionTitle>
         <RadioTiles
           name="billing-type"
-          columns={2}
+          columns={1}
           value={state.billingType}
           onChange={v => set({ billingType: v })}
           options={[
-            { value: 'insurance', label: 'Insurance' },
+            {
+              value: 'insurance',
+              label: 'Insurance',
+              content: (
+                <div className="flex flex-col gap-350">
+                  <div className="grid gap-350 sm:grid-cols-2">
+                    <SelectField label="Insurance name" options={INSURANCE_OPTIONS} placeholder="Carrier name" required />
+                    <TextField label="Member ID" required />
+                  </div>
+                  {state.estimated ? (
+                    <Card className="rounded-large shadow-card ring-1 ring-border-subtle">
+                      <div className="grid grid-cols-1 gap-x-350 gap-y-100 p-350 sm:grid-cols-2">
+                        <p className="typography-label-large">On average, Aetna clients pay $0 – $35.</p>
+                        <p className="typography-body-xsmall text-text-muted">
+                          Check if this provider is in-network and see your estimated cost.
+                        </p>
+                      </div>
+                    </Card>
+                  ) : (
+                    <Button use="secondary" className="w-full" onClick={() => set({ estimated: true })}>
+                      Verify &amp; estimate cost
+                    </Button>
+                  )}
+                </div>
+              ),
+            },
             { value: 'cash', label: 'Cash, Out-of-pocket' },
           ]}
         />
-        {state.billingType === 'insurance' && (
-          <>
-            <div className="grid gap-350 sm:grid-cols-2">
-              <SelectField label="Insurance name" options={INSURANCE_OPTIONS} placeholder="Carrier name" required />
-              <TextField label="Member ID" required />
-            </div>
-            {state.estimated ? (
-              <Card className="rounded-large shadow-card ring-1 ring-border-subtle">
-                <div className="grid grid-cols-1 gap-x-350 gap-y-100 p-350 sm:grid-cols-2">
-                  <p className="typography-label-large">On average, Aetna clients pay $0 – $35.</p>
-                  <p className="typography-body-xsmall text-text-muted">
-                    Check if this provider is in-network and see your estimated cost.
-                  </p>
-                </div>
-              </Card>
-            ) : (
-              <Button use="secondary" className="w-full sm:w-auto" onClick={() => set({ estimated: true })}>
-                Verify &amp; estimate cost
-              </Button>
-            )}
-          </>
-        )}
       </div>
 
       <Divider />
@@ -214,10 +221,8 @@ export function CostEstimateSection({ state, set }) {
       <div className="flex flex-col gap-350">
         <SectionTitle>Billing information</SectionTitle>
         <TextField label="Card number" placeholder="1234 1234 1234 1234" required />
-        <div className="grid gap-350 sm:grid-cols-2">
-          <TextField label="Expiration" placeholder="MM / YY" required />
-          <TextField label="CVC" placeholder="CVC" required />
-        </div>
+        <TextField label="Expiration" placeholder="MM / YY" required />
+        <TextField label="CVC" placeholder="CVC" required />
         <p className="typography-body-xsmall text-text-muted">
           By providing your card information, you allow Grow Therapy to charge your card for future payments in
           accordance with their terms.

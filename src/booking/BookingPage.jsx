@@ -23,12 +23,12 @@ function BookingPageHeader() {
   return (
     <section className="w-full">
       <div className="flex w-full flex-wrap items-center gap-6 sm:py-450">
-        <Avatar src="/provider-avatar.png" alt="Kathleen Chavoor-Bergen" size="xl" />
+        <Avatar src="/provider-avatar.png" alt="Daunte Henderson" size="xl" />
         <div className="flex w-full flex-1">
           <div className="flex min-w-0 flex-col gap-100">
             <div className="flex flex-wrap items-baseline gap-x-2">
-              <h1 className="typography-subhead-large">Kathleen Chavoor-Bergen</h1>
-              <span className="typography-body-small text-text-muted">(she/her)</span>
+              <h1 className="typography-subhead-large font-season">Daunte Henderson</h1>
+              <span className="typography-body-small text-text-muted">(he/him)</span>
             </div>
             <Tag className="my-2 self-start">
               <CircleCheck className="h-4 w-4" /> Grow Verified
@@ -96,7 +96,7 @@ function Step({ children, isFirst, isLast, isActive, buttonLabel, onContinue }) 
   return (
     <>
       <section
-        className={['relative flex flex-col py-550', isFirst && 'pt-0', isLast && 'pb-0'].filter(Boolean).join(' ')}
+        className={['relative flex flex-col py-550', isFirst && 'pt-450', isLast && 'pb-0'].filter(Boolean).join(' ')}
       >
         {children}
         {isActive && buttonLabel && (
@@ -198,34 +198,39 @@ export default function BookingPage() {
 
   return (
     <div className="min-h-svh bg-surface-default">
-      {/* Fills the viewport (minus the fixed bottom bars) so the in-flow footer
-          sits at the bottom when content is short, and after content when tall. */}
-      <div className="flex min-h-svh flex-col" style={{ paddingBottom: PROGRESS_BAR_HEIGHT }}>
-        <main className="mx-auto w-full max-w-[800px] flex-1 px-4 pt-450">
-          <div className="w-full bg-surface-default sm:p-0">
-            <BookingPageHeader />
-            <div className="w-full max-w-full">
-              <div className="relative flex w-full flex-col">
-                {visible.map((step, i) => (
-                  <Step
-                    key={step.id}
-                    isFirst={i === 0}
-                    isLast={i === visible.length - 1}
-                    isActive={step.id === activeStepId}
-                    buttonLabel={step.button}
-                    onContinue={advance}
-                  >
-                    {step.render()}
-                  </Step>
-                ))}
-              </div>
+      {/* Content fills at least the viewport so the footer sits below the fold —
+          it's only revealed by scrolling to the very end of the page. */}
+      <main
+        className="mx-auto min-h-svh w-full max-w-[800px] px-4 pt-450"
+        style={{ paddingBottom: onLastStep ? 0 : PROGRESS_BAR_HEIGHT }}
+      >
+        <div className="w-full bg-surface-default sm:p-0">
+          <BookingPageHeader />
+          <div className="w-full max-w-full">
+            <div className="relative flex w-full flex-col">
+              {visible.map((step, i) => (
+                <Step
+                  key={step.id}
+                  isFirst={i === 0}
+                  isLast={i === visible.length - 1}
+                  isActive={step.id === activeStepId}
+                  buttonLabel={step.button}
+                  onContinue={advance}
+                >
+                  {step.render()}
+                </Step>
+              ))}
             </div>
           </div>
-        </main>
+        </div>
+      </main>
 
-        {/* Footer always flows at the end of the content (just under the last section) */}
-        <StickyFooter schedule={schedule} apptLabel={apptLabel} enabled={onLastStep} />
-      </div>
+      {/* Price footer appears only on the final (Cost estimate) step */}
+      {onLastStep && (
+        <div style={{ paddingBottom: PROGRESS_BAR_HEIGHT }}>
+          <StickyFooter schedule={schedule} apptLabel={apptLabel} enabled={onLastStep} />
+        </div>
+      )}
 
       {/* Progress bar: always fixed at the very bottom of the screen */}
       <div className="fixed inset-x-0 bottom-0 z-50 bg-surface-default">

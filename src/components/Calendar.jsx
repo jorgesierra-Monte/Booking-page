@@ -66,14 +66,14 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
 
   return (
     <div className="w-full select-none">
-      <div className="mb-200 flex items-center justify-between">
-        <button type="button" className={navBtn} onClick={() => step(-1)} disabled={!canGoPrev} aria-label="Previous month">
+      <div className="mb-200 grid grid-cols-7 items-center">
+        <button type="button" className={cx(navBtn, 'mx-auto')} onClick={() => step(-1)} disabled={!canGoPrev} aria-label="Previous month">
           <Chevron dir="prev" />
         </button>
-        <span className="typography-label-emphasis-default">
+        <span className="col-span-5 text-center typography-label-emphasis-default">
           {MONTHS[view.getMonth()]} {view.getFullYear()}
         </span>
-        <button type="button" className={navBtn} onClick={() => step(1)} aria-label="Next month">
+        <button type="button" className={cx(navBtn, 'mx-auto')} onClick={() => step(1)} aria-label="Next month">
           <Chevron dir="next" />
         </button>
       </div>

@@ -185,32 +185,36 @@ export function RadioDot({ selected }) {
 }
 
 /* ---------------- Radio tiles (card-style radio) ---------------- */
-export function RadioTiles({ name, options, value, onChange, columns = 2, className }) {
+export function RadioTiles({ name, options, value, onChange, columns = 2, gap = 'gap-200', className }) {
   const cols = { 1: 'grid-cols-1', 2: 'grid-cols-2', 3: 'grid-cols-1 sm:grid-cols-3' }
   return (
-    <div role="radiogroup" className={cx('grid gap-200', cols[columns], className)}>
+    <div role="radiogroup" className={cx('grid', gap, cols[columns], className)}>
       {options.map(opt => {
         const selected = value === opt.value
+        const expanded = selected && opt.content
         return (
-          <label
+          <div
             key={opt.value}
             className={cx(
-              'group flex cursor-pointer items-center justify-between rounded-small bg-surface-default px-300 py-275 typography-label-emphasis-default transition',
+              'rounded-small bg-surface-default transition',
               selected
                 ? 'ring-2 ring-border-state-selected-default bg-surface-state-selected-brand'
                 : 'ring-[1.25px] ring-border-default hover:bg-surface-hover-default',
             )}
           >
-            <span>{opt.label}</span>
-            <input
-              type="radio"
-              name={name}
-              className="sr-only"
-              checked={selected}
-              onChange={() => onChange(opt.value)}
-            />
-            <RadioDot selected={selected} />
-          </label>
+            <label className="group flex cursor-pointer items-center justify-between px-300 py-275 typography-label-emphasis-default">
+              <span>{opt.label}</span>
+              <input
+                type="radio"
+                name={name}
+                className="sr-only"
+                checked={selected}
+                onChange={() => onChange(opt.value)}
+              />
+              <RadioDot selected={selected} />
+            </label>
+            {expanded && <div className="px-300 pb-350">{opt.content}</div>}
+          </div>
         )
       })}
     </div>
@@ -255,7 +259,7 @@ export function CheckboxRow({ checked, onChange, children }) {
     <label className="group flex w-full cursor-pointer items-start gap-150 text-text-default">
       <span className="relative mt-100 flex h-4 w-4 shrink-0 items-center justify-center">
         {!checked && (
-          <span className="pointer-events-none absolute h-6 w-6 rounded-rounded bg-surface-hover-default opacity-0 transition-opacity group-hover:opacity-100" />
+          <span className="pointer-events-none absolute h-6 w-6 rounded-small bg-surface-hover-default opacity-0 transition-opacity group-hover:opacity-100" />
         )}
         <span
           className={cx(
@@ -279,7 +283,7 @@ export function AddMoreLink({ label, children }) {
   const [open, setOpen] = useState(false)
   if (!open)
     return (
-      <Button use="link-secondary" className="typography-label-small min-h-[44px]" onClick={() => setOpen(true)}>
+      <Button use="link-secondary" className="typography-label-small min-h-[44px] self-start" onClick={() => setOpen(true)}>
         {label}
       </Button>
     )
