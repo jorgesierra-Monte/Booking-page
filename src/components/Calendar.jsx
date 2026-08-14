@@ -22,12 +22,15 @@ function buildGrid(viewDate) {
     const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i)
     cells.push({ date: d, inMonth: d.getMonth() === month })
   }
-  return cells
+  // chunk into weeks of 7
+  const weeks = []
+  for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7))
+  return weeks
 }
 
 function Chevron({ dir }) {
   return (
-    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <path
         d={dir === 'prev' ? 'M10 3.5L5.5 8L10 12.5' : 'M6 3.5L10.5 8L6 12.5'}
         stroke="currentColor"
@@ -44,7 +47,7 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
     () => new Date((selected ?? availableFrom).getFullYear(), (selected ?? availableFrom).getMonth(), 1),
   )
 
-  const grid = buildGrid(view)
+  const weeks = buildGrid(view)
 
   function step(delta) {
     setView(v => new Date(v.getFullYear(), v.getMonth() + delta, 1))
@@ -62,55 +65,61 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
     (view.getFullYear() === availableFrom.getFullYear() && view.getMonth() > availableFrom.getMonth())
 
   const navBtn =
-    'flex h-8 w-8 items-center justify-center rounded-rounded text-text-default transition hover:bg-surface-hover-default disabled:opacity-30 disabled:hover:bg-transparent'
+    'flex items-center justify-center rounded-small p-100 text-text-default transition hover:bg-surface-hover-default disabled:opacity-30 disabled:hover:bg-transparent'
+  // 44px cells, packed (matches Arc BETA Date picker V2)
+  const cellBase = 'flex size-11 items-center justify-center'
 
   return (
-    <div className="w-full select-none">
-      <div className="mb-200 grid grid-cols-7 items-center">
-        <button type="button" className={cx(navBtn, 'mx-auto')} onClick={() => step(-1)} disabled={!canGoPrev} aria-label="Previous month">
+    <div className="w-fit select-none">
+      <div className="mb-200 flex items-center justify-between gap-200">
+        <button type="button" className={navBtn} onClick={() => step(-1)} disabled={!canGoPrev} aria-label="Previous month">
           <Chevron dir="prev" />
         </button>
-        <span className="col-span-5 text-center typography-label-emphasis-default">
+        <span className="flex-1 text-center typography-label-emphasis-default">
           {MONTHS[view.getMonth()]} {view.getFullYear()}
         </span>
-        <button type="button" className={cx(navBtn, 'mx-auto')} onClick={() => step(1)} aria-label="Next month">
+        <button type="button" className={navBtn} onClick={() => step(1)} aria-label="Next month">
           <Chevron dir="next" />
         </button>
       </div>
 
-      <div className="grid grid-cols-7">
+      <div className="flex">
         {WEEKDAYS.map((w, i) => (
-          <span key={i} className="flex h-9 items-center justify-center typography-label-small text-text-muted">
+          <span key={i} className={cx(cellBase, 'typography-label-emphasis-default text-text-default')}>
             {w}
           </span>
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-y-100">
-        {grid.map((cell, i) => {
-          if (!cell.inMonth) return <span key={i} />
-          const available = isAvailable(cell)
-          const isSelected = sameDay(cell.date, selected)
-          return (
-            <div key={i} className="flex items-center justify-center">
-              <button
-                type="button"
-                disabled={!available}
-                onClick={() => available && onSelect(cell.date)}
-                className={cx(
-                  'flex h-11 w-11 items-center justify-center rounded-small typography-label-default transition',
-                  isSelected
-                    ? 'bg-surface-state-selected-brand text-text-default ring-2 ring-inset ring-border-state-selected-default'
-                    : available
-                      ? 'text-text-default hover:bg-surface-hover-default active:bg-[#cac6c2]'
-                      : 'text-text-muted opacity-50',
-                )}
-              >
-                {cell.date.getDate()}
-              </button>
-            </div>
-          )
-        })}
+      <div className="flex flex-col gap-100">
+        {weeks.map((week, wi) => (
+          <div key={wi} className="flex">
+            {week.map((cell, ci) => {
+              if (!cell.inMonth) return <span key={ci} className="size-11" />
+              const available = isAvailable(cell)
+              const isSelected = sameDay(cell.date, selected)
+              return (
+                <button
+                  key={ci}
+                  type="button"
+                  disabled={!available}
+                  onClick={() => available && onSelect(cell.date)}
+                  className={cx(
+                    cellBase,
+                    'rounded-small typography-label-default transition',
+                    isSelected
+                      ? 'bg-surface-state-selected-brand text-text-default ring-2 ring-inset ring-border-state-selected-default'
+                      : available
+                        ? 'text-text-default hover:bg-surface-hover-default active:bg-[#cac6c2]'
+                        : 'text-text-muted opacity-50',
+                  )}
+                >
+                  {cell.date.getDate()}
+                </button>
+              )
+            })}
+          </div>
+        ))}
       </div>
     </div>
   )

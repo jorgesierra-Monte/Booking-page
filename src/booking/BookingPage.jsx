@@ -27,7 +27,7 @@ function BookingPageHeader() {
         <div className="flex w-full flex-1">
           <div className="flex min-w-0 flex-col gap-100">
             <div className="flex flex-wrap items-baseline gap-x-2">
-              <h1 className="typography-subhead-large font-season">Daunte Henderson</h1>
+              <h1 className="typography-subhead-serif-default">Daunte Henderson</h1>
               <span className="typography-body-small text-text-muted">(he/him)</span>
             </div>
             <Tag className="my-2 self-start">
@@ -66,15 +66,7 @@ function ProgressBar({ items, activeId }) {
         return (
           <li key={item.id} className="flex min-w-0 flex-1 flex-col items-center gap-1">
             <div
-              className={[
-                'h-2 w-full',
-                isFirst && !isLast ? 'rounded-r-full' : isLast && !isFirst ? 'rounded-l-full' : 'rounded-full',
-                isFilled
-                  ? 'bg-surface-brand'
-                  : isInView
-                    ? 'bg-progressActive'
-                    : 'bg-surface-state-inactive-emphasis',
-              ].join(' ')}
+              className={['h-2 w-full rounded-full', isFilled ? 'bg-surface-inverse' : 'bg-surface-subtle'].join(' ')}
             />
             <span
               className={[
