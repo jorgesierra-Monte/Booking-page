@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import { Avatar, Button, CircleCheck, Divider, Tag } from './ui'
+import { Avatar, Button, CircleCheck, Tag } from './ui'
 import {
   CancellationSection,
   ClientDetailsSection,
@@ -49,7 +49,6 @@ function BookingPageHeader() {
           </div>
         </div>
       </div>
-      <Divider className="hidden sm:block" />
     </section>
   )
 }
@@ -99,7 +98,6 @@ function Step({ children, isFirst, isLast, isActive, buttonLabel, onContinue }) 
           </div>
         )}
       </section>
-      {!isLast && !isActive && <Divider />}
     </>
   )
 }

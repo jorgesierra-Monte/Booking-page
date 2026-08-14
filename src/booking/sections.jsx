@@ -7,7 +7,6 @@ import {
   Card,
   Check,
   CheckboxRow,
-  Divider,
   RadioTiles,
   SelectableGroup,
   SelectField,
@@ -121,7 +120,7 @@ export function CancellationSection() {
 export function ClientDetailsSection() {
   const [relationship, setRelationship] = useState('self')
   return (
-    <section aria-label="Client information" className="flex flex-col gap-550">
+    <section aria-label="Client information" className="flex flex-col gap-600">
       <div>
         <SectionTitle>Client information</SectionTitle>
         <div className="flex flex-col gap-350">
@@ -145,8 +144,6 @@ export function ClientDetailsSection() {
           <SelectField label="Client's sex listed on insurance" options={SEX_OPTIONS} required />
         </div>
       </div>
-
-      <Divider />
 
       <div>
         <SectionTitle>Client's residential address</SectionTitle>
@@ -174,7 +171,7 @@ export function ClientDetailsSection() {
 /* ================= 4. Cost estimate ================= */
 export function CostEstimateSection({ state, set }) {
   return (
-    <section aria-label="Coverage costs" className="flex flex-col gap-550">
+    <section aria-label="Coverage costs" className="flex flex-col gap-600">
       {/* Payment options */}
       <div className="flex flex-col gap-350">
         <SectionTitle>Coverage costs</SectionTitle>
@@ -215,8 +212,6 @@ export function CostEstimateSection({ state, set }) {
         />
       </div>
 
-      <Divider />
-
       {/* Billing */}
       <div className="flex flex-col gap-350">
         <SectionTitle>Billing information</SectionTitle>
@@ -228,8 +223,6 @@ export function CostEstimateSection({ state, set }) {
           accordance with their terms.
         </p>
       </div>
-
-      <Divider />
 
       {/* Agreements */}
       <div className="flex flex-col gap-350">
