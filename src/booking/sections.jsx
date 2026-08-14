@@ -64,7 +64,7 @@ export function DateTimeSection({ state, set }) {
           { value: 'virtual', label: 'Virtual' },
           { value: 'in-person', label: 'In person' },
         ]}
-        className="mb-550"
+        className="mb-650"
       />
       <div className="flex flex-col gap-350 sm:flex-row sm:gap-x-450">
         <div className="sm:min-w-0 sm:flex-1">

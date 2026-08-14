@@ -258,7 +258,7 @@ export function RadioTiles({ name, options, value, onChange, columns = 2, gap = 
             className={cx(
               'rounded-small bg-surface-default transition',
               selected
-                ? 'ring-2 ring-border-state-selected-default bg-surface-state-selected-brand'
+                ? 'ring-[1.25px] ring-border-state-selected-default bg-surface-state-selected-brand'
                 : 'ring-[1.25px] ring-border-default hover:bg-surface-hover-default',
             )}
           >
@@ -298,7 +298,7 @@ export function SelectableGroup({ options, value, onChange, columns = 3, classNa
             className={cx(
               'flex min-h-component-mediumButtons items-center justify-center rounded-small bg-surface-default px-400 typography-label-emphasis-default text-text-default transition',
               selected
-                ? 'ring-2 ring-inset ring-border-state-selected-default bg-surface-state-selected-brand'
+                ? 'ring-[1.25px] ring-inset ring-border-state-selected-default bg-surface-state-selected-brand'
                 : 'ring-[1.25px] ring-inset ring-border-default hover:bg-surface-hover-default active:bg-[#cac6c2]',
             )}
           >

@@ -33,7 +33,7 @@ export default function TimeSlots({ date, selected, onSelect }) {
               className={cx(
                 'flex min-h-component-mediumButtons w-full items-center justify-center rounded-small bg-surface-default px-400 typography-label-emphasis-default text-text-default transition',
                 isSelected
-                  ? 'ring-2 ring-inset ring-border-state-selected-default bg-surface-state-selected-brand'
+                  ? 'ring-[1.25px] ring-inset ring-border-state-selected-default bg-surface-state-selected-brand'
                   : 'ring-[1.25px] ring-inset ring-border-default hover:bg-surface-hover-default active:bg-[#cac6c2]',
               )}
             >
