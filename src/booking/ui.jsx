@@ -18,16 +18,18 @@ export function Divider({ className }) {
 export function Button({ use = 'primary', className, children, ...rest }) {
   const isLink = use === 'link-secondary'
   const base = cx(
-    'inline-flex items-center justify-center typography-label-emphasis-default transition disabled:opacity-50 disabled:cursor-not-allowed',
-    // BETA Button V2: 8px radius, px-300 py-275. Links sit flush with no padding.
-    !isLink && 'rounded-small px-300 py-275',
+    'inline-flex items-center justify-center typography-label-emphasis-default transition disabled:cursor-not-allowed',
+    // Arc Button V2: px-300 py-275. Links sit flush with no padding.
+    !isLink && 'px-300 py-275',
   )
   const uses = {
+    // Arc Button V2 primary: fully-rounded pill, near-black surface, white text.
+    // Disabled → #b1aeaa surface / #313132 text (inactive tokens, not opacity).
     primary:
-      'bg-action-primary-surface text-action-primary-text hover:bg-action-primary-hover active:bg-action-primary-pressed',
+      'rounded-rounded bg-action-primary-surface text-action-primary-text hover:bg-action-primary-hover active:bg-action-primary-pressed disabled:bg-[#b1aeaa] disabled:text-[#313132]',
     secondary:
-      'bg-action-secondary-surface text-action-secondary-text ring-1 ring-action-secondary-border hover:bg-action-secondary-hover active:bg-surface-pressed',
-    'link-secondary': 'underline underline-offset-4 text-text-default hover:text-text-muted bg-transparent',
+      'rounded-small bg-action-secondary-surface text-action-secondary-text ring-1 ring-action-secondary-border hover:bg-action-secondary-hover active:bg-surface-pressed disabled:opacity-50',
+    'link-secondary': 'underline underline-offset-4 text-text-default hover:text-text-muted bg-transparent disabled:opacity-50',
   }
   return (
     <button type="button" className={cx(base, uses[use], className)} {...rest}>
