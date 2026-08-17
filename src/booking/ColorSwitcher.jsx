@@ -45,6 +45,13 @@ const FAMILIES = [
       { label: 'Frodo 500', theme: 'frodo500filled' },
     ],
   },
+  {
+    header: 'Wilson + Frodo',
+    options: [
+      { label: 'Frodo 400', theme: 'frodo400wilson' },
+      { label: 'Frodo 500', theme: 'frodo500wilson' },
+    ],
+  },
 ]
 
 export function ColorSwitcher({ active = null, onSelect }) {

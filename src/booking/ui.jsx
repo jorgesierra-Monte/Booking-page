@@ -102,7 +102,7 @@ function FloatLabel({ label, required, optional, active }) {
       className={cx(
         'pointer-events-none absolute left-250 z-[1] origin-left transition-all',
         active
-          ? 'top-[7px] typography-body-xsmall text-text-muted'
+          ? 'top-[7px] typography-body-xsmall text-text-default'
           : 'top-1/2 -translate-y-1/2 typography-label-default text-text-default',
       )}
     >
@@ -269,7 +269,7 @@ export function SelectField({ label, options = [], placeholder, required, option
       {open && (
         <div
           role="listbox"
-          className="absolute inset-x-0 top-[calc(100%+4px)] z-20 flex max-h-[288px] flex-col gap-100 overflow-y-auto rounded-small border-[length:var(--stroke-weight)] border-[color:var(--field-border-open)] bg-surface-default p-100"
+          className="absolute inset-x-0 top-[calc(100%+4px)] z-20 flex max-h-[288px] flex-col gap-100 overflow-y-auto rounded-small border-[length:var(--stroke-weight)] border-[color:var(--dropdown-border)] bg-[var(--dropdown-surface)] p-100"
         >
           {options.map(o => {
             const selected = o === value
@@ -354,7 +354,9 @@ export function RadioTiles({ name, options, value, onChange, columns = 2, gap = 
               />
               <RadioDot selected={selected} />
             </label>
-            {expanded && <div className="px-300 pb-350">{opt.content}</div>}
+            {/* Reset text color: the selected tile paints its label white in
+                dark themes, but the expanded content card needs its own dark text. */}
+            {expanded && <div className="px-300 pb-350 text-text-default">{opt.content}</div>}
           </div>
         )
       })}

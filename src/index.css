@@ -101,7 +101,9 @@
   --field-border: var(--border-default);                  /* #817f7d rest */
   --field-border-hover: #403f3e;
   --field-border-focus: var(--border-selected-emphasis);  /* #2e291e text-input focus */
-  --field-border-open: var(--border-selected-default);    /* #4a412d select open + flyout */
+  --field-border-open: var(--border-selected-default);    /* #4a412d select open border */
+  --dropdown-surface: var(--surface-default);             /* flyout panel bg */
+  --dropdown-border: var(--field-border-open);            /* flyout panel border */
 
   --error: var(--lasso-500);
   --success: var(--sproutie-500);
@@ -239,6 +241,62 @@
   --field-border-hover: transparent;
   --field-border-focus: #cac6c2;
   --field-border-open: #cac6c2;
+}
+
+/* ---- Combined: Wilson + Frodo 400 ----
+   Filled Frodo 400 components + WILSON-tinted filled text inputs (#f4f2f0). */
+:root[data-theme="frodo400wilson"] {
+  --select-tile-surface-selected: var(--frodo-400);
+  --select-tile-text-selected: var(--text-inverse);
+  --select-border-selected: transparent;
+  --radio-dot-surface: var(--surface-default);
+  --radio-dot-center: var(--frodo-400);
+  --day-surface-selected: var(--frodo-400);
+  --day-text-selected: var(--text-inverse);
+  --dropdown-row-surface-selected: var(--wilson-450); /* #e6e2de */
+  --dropdown-row-text-selected: var(--text-default);
+  /* Filled (borderless) tiles — neutral gray */
+  --tile-surface: #f5f5f3;
+  --tile-surface-hover: #ebeae8;
+  --tile-border: transparent;
+  /* Wilson-tinted filled text inputs */
+  --field-surface: var(--surface-subtle); /* #f4f2f0 */
+  --field-surface-hover: var(--wilson-350); /* #ebe8e5 */
+  --field-border: transparent;
+  --field-border-hover: transparent;
+  --field-border-focus: #cac6c2;
+  --field-border-open: #cac6c2;
+  /* Wilson-tinted flyout with a subtle #cac6c2 hairline border */
+  --dropdown-surface: var(--surface-subtle); /* #f4f2f0 */
+  --dropdown-border: #cac6c2;
+}
+
+/* ---- Combined: Wilson + Frodo 500 ----
+   Filled Frodo 500 components + WILSON-tinted filled text inputs (#f4f2f0). */
+:root[data-theme="frodo500wilson"] {
+  --select-tile-surface-selected: var(--frodo-500);
+  --select-tile-text-selected: var(--text-inverse);
+  --select-border-selected: transparent;
+  --radio-dot-surface: var(--surface-default);
+  --radio-dot-center: var(--frodo-500);
+  --day-surface-selected: var(--frodo-500);
+  --day-text-selected: var(--text-inverse);
+  --dropdown-row-surface-selected: var(--wilson-450); /* #e6e2de */
+  --dropdown-row-text-selected: var(--text-default);
+  /* Filled (borderless) tiles — neutral gray */
+  --tile-surface: #f5f5f3;
+  --tile-surface-hover: #ebeae8;
+  --tile-border: transparent;
+  /* Wilson-tinted filled text inputs */
+  --field-surface: var(--surface-subtle); /* #f4f2f0 */
+  --field-surface-hover: var(--wilson-350); /* #ebe8e5 */
+  --field-border: transparent;
+  --field-border-hover: transparent;
+  --field-border-focus: #cac6c2;
+  --field-border-open: #cac6c2;
+  /* Wilson-tinted flyout with a subtle #cac6c2 hairline border */
+  --dropdown-surface: var(--surface-subtle); /* #f4f2f0 */
+  --dropdown-border: #cac6c2;
 }
 
 /* ---- Color option: Frodo 500 ----
