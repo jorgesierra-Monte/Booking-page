@@ -1,23 +1,37 @@
 // Floating color-option switcher — a dev/review control for comparing selected-state
-// color treatments (radio, selectable, day selector, dropdown) side by side.
-// Controlled: the parent owns the active theme (applies the `data-theme` attribute,
-// persists it, and resets the form on change). Token overrides live in index.css.
-// Chrome matches the Figma "floating nav" (node 2646-4896) and uses tokens NOT touched
-// by any theme block, so it never restyles itself.
+// color treatments (radio, selectable, day selector, dropdown) side by side, plus
+// border-weight and device (desktop/mobile) controls.
+// Fully controlled: the parent (BookingPage) owns theme / stroke / device, persists
+// them, and applies theme + stroke to the document (so an embedded preview iframe
+// picks them up too). Chrome matches the Figma "floating nav" (node 2646-4896) and
+// uses tokens NOT touched by any theme block, so it never restyles itself.
 // Desktop: compact card, always visible. Mobile: collapses to a launcher pill.
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 const cx = (...c) => c.filter(Boolean).join(' ')
 
-// Border-weight control (independent of the color option). Drives --stroke-weight,
-// used by radio/selectable/day/text-input borders. Applied live (no form reset).
-const STROKE_KEY = 'booking-stroke-weight'
 const STROKE_OPTIONS = [
   { label: '1', value: '1px' },
   { label: '1.25', value: '1.25px' },
   { label: '2', value: '2px' },
 ]
-const applyStroke = v => document.documentElement.style.setProperty('--stroke-weight', v)
+
+const DesktopIcon = () => (
+  <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+    <rect x="2.5" y="3.5" width="15" height="10" rx="1.5" />
+    <path d="M7 16.5h6M10 13.5v3" strokeLinecap="round" />
+  </svg>
+)
+const MobileIcon = () => (
+  <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+    <rect x="6" y="2.5" width="8" height="15" rx="2" />
+    <path d="M9 15h2" strokeLinecap="round" />
+  </svg>
+)
+const DEVICE_OPTIONS = [
+  { value: 'desktop', label: 'Desktop', Icon: DesktopIcon },
+  { value: 'mobile', label: 'Mobile', Icon: MobileIcon },
+]
 
 // Families → options. `theme: null` is the untouched prototype ("Current").
 // Add a new option here + one [data-theme] block in index.css to extend.
@@ -54,23 +68,17 @@ const FAMILIES = [
   },
 ]
 
-export function ColorSwitcher({ active = null, onSelect }) {
+const segItem = on =>
+  cx(
+    'flex h-[30px] flex-1 items-center justify-center rounded-rounded transition-colors',
+    on ? 'bg-action-primary-surface text-text-inverse' : 'text-text-default hover:bg-surface-hover-emphasis',
+  )
+
+export function ColorSwitcher({ active = null, onSelect, stroke = '1px', onStroke, device = 'desktop', onDevice }) {
   // Start collapsed only on small screens; desktop always shows the card.
   const [open, setOpen] = useState(
     () => typeof window === 'undefined' || !window.matchMedia('(max-width: 639px)').matches,
   )
-
-  const [stroke, setStroke] = useState(
-    () => (typeof window === 'undefined' ? '1px' : localStorage.getItem(STROKE_KEY) || '1px'),
-  )
-  useEffect(() => {
-    applyStroke(stroke)
-  }, [])
-  const selectStroke = value => {
-    setStroke(value)
-    applyStroke(value)
-    localStorage.setItem(STROKE_KEY, value)
-  }
 
   return (
     <>
@@ -91,7 +99,7 @@ export function ColorSwitcher({ active = null, onSelect }) {
       {/* Card — always visible on desktop; on mobile only when open. */}
       <div
         className={cx(
-          'fixed left-4 top-1/2 z-[60] w-[131px] -translate-y-1/2 flex-col gap-450 rounded-medium border border-border-subtle bg-surface-default px-[13px] py-[21px] shadow-[0_4px_16px_rgba(1,2,4,0.08)] sm:flex',
+          'fixed left-4 top-1/2 z-[60] max-h-[calc(100svh-32px)] w-[131px] -translate-y-1/2 flex-col gap-450 overflow-y-auto rounded-medium border border-border-subtle bg-surface-default px-[13px] py-[21px] shadow-[0_4px_16px_rgba(1,2,4,0.08)] sm:flex',
           open ? 'flex' : 'hidden',
         )}
         role="group"
@@ -138,33 +146,41 @@ export function ColorSwitcher({ active = null, onSelect }) {
           </div>
         ))}
 
-        {/* Border weight — segmented toggle (1 / 1.5 / 2 px). */}
+        {/* Border weight — segmented toggle (1 / 1.25 / 2 px). */}
         <div className="flex flex-col gap-150">
-          <span className="text-center typography-label-emphasis-xsmall text-text-muted">
-            Border weight
-          </span>
-          <div
-            className="flex gap-[2px] rounded-rounded bg-surface-subtle p-[3px]"
-            role="group"
-            aria-label="Border weight"
-          >
-            {STROKE_OPTIONS.map(o => {
-              const on = stroke === o.value
-              return (
-                <button
-                  key={o.value}
-                  type="button"
-                  aria-pressed={on}
-                  onClick={() => selectStroke(o.value)}
-                  className={cx(
-                    'flex h-[30px] flex-1 items-center justify-center rounded-rounded typography-label-small transition-colors',
-                    on ? 'bg-action-primary-surface text-text-inverse' : 'text-text-default hover:bg-surface-hover-emphasis',
-                  )}
-                >
-                  {o.label}
-                </button>
-              )
-            })}
+          <span className="text-center typography-label-emphasis-xsmall text-text-muted">Border weight</span>
+          <div className="flex gap-[2px] rounded-rounded bg-surface-subtle p-[3px]" role="group" aria-label="Border weight">
+            {STROKE_OPTIONS.map(o => (
+              <button
+                key={o.value}
+                type="button"
+                aria-pressed={stroke === o.value}
+                onClick={() => onStroke?.(o.value)}
+                className={cx(segItem(stroke === o.value), 'typography-label-small')}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Device — icon segmented toggle (desktop / mobile). */}
+        <div className="flex flex-col gap-150">
+          <span className="text-center typography-label-emphasis-xsmall text-text-muted">Device</span>
+          <div className="flex gap-[2px] rounded-rounded bg-surface-subtle p-[3px]" role="group" aria-label="Device">
+            {DEVICE_OPTIONS.map(({ value, label, Icon }) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={device === value}
+                aria-label={label}
+                title={label}
+                onClick={() => onDevice?.(value)}
+                className={segItem(device === value)}
+              >
+                <Icon />
+              </button>
+            ))}
           </div>
         </div>
       </div>

@@ -30,7 +30,7 @@ const ADDRESS_OPTIONS = ['123 Market St', '456 Elm Ave', '789 Oak Blvd', 'Enter 
 /* ---------------- Section title (FormSectionTitle) ---------------- */
 export function SectionTitle({ children, display, subhead, headerContent }) {
   return (
-    <div className="mb-350 flex w-full items-center justify-between gap-4">
+    <div className="mb-350 flex w-full flex-col gap-100 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
       <div className="flex min-w-0 flex-col gap-100">
         <h2 className={display ? 'typography-display-small' : 'typography-subhead-serif-default'}>{children}</h2>
         {subhead && <p className="typography-label-default text-text-muted">{subhead}</p>}
@@ -48,7 +48,7 @@ export function DateTimeSection({ state, set }) {
         display
         headerContent={
           state.appointmentType === 'in-person' ? (
-            <p className="typography-label-default shrink-0 text-right text-text-muted">{state.address}</p>
+            <p className="typography-label-default shrink-0 text-text-muted sm:text-right">{state.address}</p>
           ) : null
         }
       >
@@ -57,7 +57,7 @@ export function DateTimeSection({ state, set }) {
       <RadioTiles
         name="appointment-type"
         columns={2}
-        gap="gap-450"
+        gap="gap-200"
         value={state.appointmentType}
         onChange={v => set({ appointmentType: v })}
         options={[

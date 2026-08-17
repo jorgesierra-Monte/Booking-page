@@ -70,7 +70,7 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
   const cellBase = 'flex size-11 items-center justify-center'
 
   return (
-    <div className="w-fit select-none">
+    <div className="w-full select-none sm:w-fit">
       <div className="mb-200 flex items-center justify-between gap-200">
         <button type="button" className={navBtn} onClick={() => step(-1)} disabled={!canGoPrev} aria-label="Previous month">
           <Chevron dir="prev" />
@@ -83,7 +83,7 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
         </button>
       </div>
 
-      <div className="flex">
+      <div className="flex justify-between sm:justify-start">
         {WEEKDAYS.map((w, i) => (
           <span key={i} className={cx(cellBase, 'typography-label-emphasis-default text-text-default')}>
             {w}
@@ -93,7 +93,7 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
 
       <div className="flex flex-col gap-100">
         {weeks.map((week, wi) => (
-          <div key={wi} className="flex">
+          <div key={wi} className="flex justify-between sm:justify-start">
             {week.map((cell, ci) => {
               if (!cell.inMonth) return <span key={ci} className="size-11" />
               const available = isAvailable(cell)

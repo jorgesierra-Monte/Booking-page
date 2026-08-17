@@ -330,3 +330,14 @@ body {
 #root {
   min-height: 100svh;
 }
+
+/* Mobile-preview iframe (?embed=1): hide the page scrollbar rail (still scrollable)
+   so content fills the phone screen edge-to-edge, like a real device. */
+html[data-embed],
+html[data-embed] body {
+  scrollbar-width: none;
+}
+html[data-embed]::-webkit-scrollbar,
+html[data-embed] body::-webkit-scrollbar {
+  display: none;
+}

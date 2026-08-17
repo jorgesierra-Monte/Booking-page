@@ -141,10 +141,31 @@ const makeInitialState = () => ({
 })
 
 const THEME_STORAGE_KEY = 'booking-color-option'
+const STROKE_STORAGE_KEY = 'booking-stroke-weight'
+const DEVICE_STORAGE_KEY = 'booking-device'
+
 const applyTheme = theme => {
   const root = document.documentElement
   if (theme) root.dataset.theme = theme
   else delete root.dataset.theme
+}
+const applyStroke = v => document.documentElement.style.setProperty('--stroke-weight', v)
+
+// Rendered inside the switcher's "mobile" device mode: the same app loaded in a
+// phone-width iframe (?embed=1) so the real `sm:` breakpoints resolve to mobile.
+// Same origin → the iframe shares localStorage, so it inherits the current theme +
+// stroke. `reloadKey` remounts it when those change so the preview stays in sync.
+function MobilePreview({ reloadKey }) {
+  return (
+    <div className="flex min-h-svh items-center justify-center bg-surface-subtle px-4 py-8">
+      <div
+        className="shrink-0 overflow-hidden rounded-[44px] border-[10px] border-[#010204] bg-surface-default shadow-[0_24px_60px_rgba(1,2,4,0.28)]"
+        style={{ width: 390, height: 'min(844px, calc(100svh - 64px))' }}
+      >
+        <iframe key={reloadKey} src="?embed=1" title="Mobile preview" className="h-full w-full border-0" />
+      </div>
+    </div>
+  )
 }
 
 /* ---------------- Page (app-shell layout) ---------------- */
@@ -167,12 +188,22 @@ export default function BookingPage() {
 
   // Color-option (theme) ownership. Restore the saved option on mount, and on every
   // switch reset all components to their default state so each option is compared fresh.
-  const [theme, setTheme] = useState(() =>
-    typeof window === 'undefined' ? null : localStorage.getItem(THEME_STORAGE_KEY) || null,
-  )
+  const isEmbed = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('embed')
+  const read = (key, fallback) => (typeof window === 'undefined' ? fallback : localStorage.getItem(key) || fallback)
+
+  const [theme, setTheme] = useState(() => read(THEME_STORAGE_KEY, null) || null)
+  const [stroke, setStroke] = useState(() => read(STROKE_STORAGE_KEY, '1px'))
+  // Device only drives the outer preview; inside the embed iframe it's forced desktop.
+  const [device, setDevice] = useState(() => (isEmbed ? 'desktop' : read(DEVICE_STORAGE_KEY, 'desktop')))
+
+  // Apply theme + stroke on mount so both the top-level page and the embed iframe reflect them.
   useEffect(() => {
     applyTheme(theme)
+    applyStroke(stroke)
+    // Inside the mobile-preview iframe: hide the page scrollbar so content fills edge-to-edge.
+    if (isEmbed) document.documentElement.dataset.embed = 'true'
   }, [])
+
   const selectTheme = next => {
     setTheme(next)
     applyTheme(next)
@@ -180,6 +211,15 @@ export default function BookingPage() {
     else localStorage.removeItem(THEME_STORAGE_KEY)
     setState(makeInitialState())
     setActiveIndex(0)
+  }
+  const selectStroke = value => {
+    setStroke(value)
+    applyStroke(value)
+    localStorage.setItem(STROKE_STORAGE_KEY, value)
+  }
+  const selectDevice = value => {
+    setDevice(value)
+    localStorage.setItem(DEVICE_STORAGE_KEY, value)
   }
 
   // Auto-advance out of the date/time step once a slot is chosen.
@@ -215,9 +255,8 @@ export default function BookingPage() {
       : 'Select a day and time'
   const onLastStep = activeIndex === steps.length - 1
 
-  return (
+  const page = (
     <div className="min-h-svh bg-surface-default">
-      <ColorSwitcher active={theme} onSelect={selectTheme} />
       {/* Content fills at least the viewport so the footer sits below the fold —
           it's only revealed by scrolling to the very end of the page. */}
       <main
@@ -259,5 +298,22 @@ export default function BookingPage() {
         </div>
       </div>
     </div>
+  )
+
+  // Embedded (inside the mobile-preview iframe): just the page, no switcher/frame.
+  if (isEmbed) return page
+
+  return (
+    <>
+      <ColorSwitcher
+        active={theme}
+        onSelect={selectTheme}
+        stroke={stroke}
+        onStroke={selectStroke}
+        device={device}
+        onDevice={selectDevice}
+      />
+      {device === 'mobile' ? <MobilePreview reloadKey={`${theme ?? 'current'}|${stroke}`} /> : page}
+    </>
   )
 }
