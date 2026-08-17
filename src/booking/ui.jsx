@@ -156,7 +156,13 @@ export function SelectField({ label, options = [], placeholder, required, option
   }, [open])
 
   return (
-    <div ref={ref} className={cx(fieldShell, 'relative')}>
+    <div
+      ref={ref}
+      className={cx(
+        'relative w-full rounded-small bg-surface-default ring-inset transition',
+        open ? 'ring-[1.25px] ring-border-state-selected-default' : 'ring-[1.25px] ring-border-default',
+      )}
+    >
       <FloatLabel label={label} required={required} optional={optional} active={active} />
       <button
         type="button"
@@ -190,7 +196,7 @@ export function SelectField({ label, options = [], placeholder, required, option
       {open && (
         <div
           role="listbox"
-          className="absolute inset-x-0 top-[calc(100%+4px)] z-20 flex max-h-[288px] flex-col gap-100 overflow-y-auto rounded-small border-[1.25px] border-border-subtle bg-surface-default p-100 shadow-card"
+          className="absolute inset-x-0 top-[calc(100%+4px)] z-20 flex max-h-[288px] flex-col gap-100 overflow-y-auto rounded-small border-[1.25px] border-border-state-selected-default bg-surface-default p-100"
         >
           {options.map(o => {
             const selected = o === value
@@ -296,10 +302,10 @@ export function SelectableGroup({ options, value, onChange, columns = 3, classNa
             type="button"
             onClick={() => onChange(opt.value)}
             className={cx(
-              'flex min-h-component-mediumButtons items-center justify-center rounded-small bg-surface-default px-400 typography-label-emphasis-default text-text-default transition',
+              'flex min-h-component-mediumButtons items-center justify-center rounded-small bg-surface-default px-350 typography-label-emphasis-default text-text-default transition',
               selected
                 ? 'ring-[1.25px] ring-inset ring-border-state-selected-default bg-surface-state-selected-brand'
-                : 'ring-[1.25px] ring-inset ring-border-default hover:bg-surface-hover-default active:bg-[#cac6c2]',
+                : 'ring-[1.25px] ring-inset ring-border-default hover:bg-surface-hover-default hover:ring-[#403f3e]',
             )}
           >
             {opt.label}

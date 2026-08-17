@@ -31,10 +31,10 @@ export default function TimeSlots({ date, selected, onSelect }) {
               type="button"
               onClick={() => onSelect(slot)}
               className={cx(
-                'flex min-h-component-mediumButtons w-full items-center justify-center rounded-small bg-surface-default px-400 typography-label-emphasis-default text-text-default transition',
+                'flex min-h-component-mediumButtons w-full items-center justify-center rounded-small bg-surface-default px-350 typography-label-emphasis-default text-text-default transition',
                 isSelected
                   ? 'ring-[1.25px] ring-inset ring-border-state-selected-default bg-surface-state-selected-brand'
-                  : 'ring-[1.25px] ring-inset ring-border-default hover:bg-surface-hover-default active:bg-[#cac6c2]',
+                  : 'ring-[1.25px] ring-inset ring-border-default hover:bg-surface-hover-default hover:ring-[#403f3e]',
               )}
             >
               {slot}
