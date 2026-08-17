@@ -84,9 +84,13 @@ export function Check({ className }) {
 }
 
 /* ---------------- Arc floating-label field (shared) ---------------- */
-// Box: white, 8px radius, 1.25px border/default; focus → 2px near-black ring.
+// Arc BETA Text Input V2 states, driven by --field-* tokens so a color option can
+// swap the whole treatment (e.g. bordered → borderless filled). 1px border throughout;
+// `:hover:not(:focus-within)` keeps focus winning over hover deterministically.
+//   bordered default: bg #fff · rest #817f7d · hover #403f3e · focus #2e291e
+//   filled option:    bg #f5f5f3/#ebeae8 · transparent border · focus #cac6c2
 const fieldShell =
-  'relative w-full rounded-small bg-surface-default ring-[1.25px] ring-inset ring-border-default transition focus-within:ring-2 focus-within:ring-border-strong'
+  'relative w-full rounded-small ring-[length:var(--stroke-weight)] ring-inset transition bg-[var(--field-surface)] ring-[color:var(--field-border)] [&:hover:not(:focus-within)]:bg-[var(--field-surface-hover)] [&:hover:not(:focus-within)]:ring-[color:var(--field-border-hover)] focus-within:ring-[color:var(--field-border-focus)]'
 const floatEase = { transitionDuration: 'var(--float-duration)', transitionTimingFunction: 'var(--float-ease)' }
 
 function FloatLabel({ label, required, optional, active }) {
@@ -110,7 +114,10 @@ function FloatLabel({ label, required, optional, active }) {
 const fieldInput =
   'h-[52px] w-full rounded-small bg-transparent px-250 pb-[6px] pt-[22px] typography-label-default text-text-default outline-none placeholder:text-text-muted transition-opacity duration-100 ease-out'
 
-export function TextField({ label, placeholder, required, optional, type = 'text', inputMode }) {
+export function TextField({ label, placeholder, required, optional, type = 'text', inputMode, mask }) {
+  if (mask && MASK_CONFIG[mask]) {
+    return <MaskedField label={label} required={required} optional={optional} inputMode={inputMode} mask={mask} />
+  }
   const [focused, setFocused] = useState(false)
   const [value, setValue] = useState('')
   const active = focused || value !== ''
@@ -128,6 +135,68 @@ export function TextField({ label, placeholder, required, optional, type = 'text
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         className={cx(fieldInput, active ? 'opacity-100' : 'opacity-0')}
+      />
+    </div>
+  )
+}
+
+// Masked variant (Arc BETA Text Input V2 · Masked): shows the full mask skeleton —
+// typed digits render in default text, the remaining template stays muted, e.g.
+// "(415) 000-0000". A skeleton overlay sits under a transparent-text input so the
+// caret lands exactly at the typed/skeleton boundary.
+const MASK_CONFIG = {
+  phone: { template: '(000) 000-0000', slots: [1, 2, 3, 6, 7, 8, 10, 11, 12, 13] },
+  date: { template: 'MM/DD/YYYY', slots: [0, 1, 3, 4, 6, 7, 8, 9] },
+}
+
+function MaskedField({ label, required, optional, inputMode, mask }) {
+  const cfg = MASK_CONFIG[mask]
+  const [focused, setFocused] = useState(false)
+  const [digits, setDigits] = useState('')
+  const active = focused || digits.length > 0
+
+  const chars = cfg.template.split('')
+  cfg.slots.forEach((pos, i) => {
+    if (i < digits.length) chars[pos] = digits[i]
+  })
+  const boundary = digits.length > 0 ? cfg.slots[digits.length - 1] + 1 : 0
+  const darkText = chars.slice(0, boundary).join('')
+  const skeletonText = chars.slice(boundary).join('')
+
+  const onKeyDown = e => {
+    if (/^\d$/.test(e.key)) {
+      e.preventDefault()
+      if (digits.length < cfg.slots.length) setDigits(d => d + e.key)
+    } else if (e.key === 'Backspace') {
+      e.preventDefault()
+      setDigits(d => d.slice(0, -1))
+    }
+  }
+
+  return (
+    <div className={fieldShell}>
+      <FloatLabel label={label} required={required} optional={optional} active={active} />
+      {/* Skeleton overlay — typed portion in default text, remainder muted. */}
+      <div
+        aria-hidden="true"
+        className={cx(
+          'pointer-events-none absolute inset-0 px-250 pt-[22px] pb-[6px] transition-opacity duration-100 ease-out',
+          active ? 'opacity-100' : 'opacity-0',
+        )}
+      >
+        <div className="flex h-full items-center whitespace-pre typography-label-default">
+          <span className="text-text-default">{darkText}</span>
+          <span className="text-text-muted">{skeletonText}</span>
+        </div>
+      </div>
+      <input
+        inputMode={inputMode}
+        value={darkText}
+        onKeyDown={onKeyDown}
+        onChange={() => {}}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className={cx(fieldInput, 'text-transparent caret-[#010204]', active ? 'opacity-100' : 'opacity-0')}
       />
     </div>
   )
@@ -159,8 +228,10 @@ export function SelectField({ label, options = [], placeholder, required, option
     <div
       ref={ref}
       className={cx(
-        'relative w-full rounded-small bg-surface-default ring-inset transition',
-        open ? 'ring-[1.25px] ring-border-state-selected-default' : 'ring-[1.25px] ring-border-default',
+        'relative w-full rounded-small ring-[length:var(--stroke-weight)] ring-inset transition bg-[var(--field-surface)]',
+        open
+          ? 'ring-[color:var(--field-border-open)]'
+          : 'ring-[color:var(--field-border)] [&:hover:not(:focus-within)]:bg-[var(--field-surface-hover)] [&:hover:not(:focus-within)]:ring-[color:var(--field-border-hover)]',
       )}
     >
       <FloatLabel label={label} required={required} optional={optional} active={active} />
@@ -196,7 +267,7 @@ export function SelectField({ label, options = [], placeholder, required, option
       {open && (
         <div
           role="listbox"
-          className="absolute inset-x-0 top-[calc(100%+4px)] z-20 flex max-h-[288px] flex-col gap-100 overflow-y-auto rounded-small border-[1.25px] border-border-state-selected-default bg-surface-default p-100"
+          className="absolute inset-x-0 top-[calc(100%+4px)] z-20 flex max-h-[288px] flex-col gap-100 overflow-y-auto rounded-small border-[length:var(--stroke-weight)] border-[color:var(--field-border-open)] bg-surface-default p-100"
         >
           {options.map(o => {
             const selected = o === value
@@ -211,12 +282,14 @@ export function SelectField({ label, options = [], placeholder, required, option
                   setOpen(false)
                 }}
                 className={cx(
-                  'flex h-12 shrink-0 items-center justify-between rounded-xsmall px-200 typography-label-default text-text-default transition-colors',
-                  selected ? 'bg-surface-state-selected-brand' : 'hover:bg-surface-hover-default',
+                  'flex h-12 shrink-0 items-center justify-between rounded-xsmall px-200 typography-label-default transition-colors',
+                  selected
+                    ? 'bg-[var(--dropdown-row-surface-selected)] text-[var(--dropdown-row-text-selected)]'
+                    : 'text-text-default hover:bg-[var(--tile-surface-hover)]',
                 )}
               >
                 <span className="truncate text-left">{o}</span>
-                {selected && <Check className="ml-200 h-5 w-5 shrink-0 text-text-default" />}
+                {selected && <Check className="ml-200 h-5 w-5 shrink-0 text-[var(--dropdown-row-text-selected)]" />}
               </button>
             )
           })}
@@ -240,11 +313,11 @@ export function RadioDot({ selected }) {
         className={cx(
           'relative flex h-4 w-4 items-center justify-center rounded-rounded transition-colors',
           selected
-            ? 'bg-surface-inverse'
-            : 'border-[1.25px] border-border-default bg-surface-default group-hover:border-[#403f3e]',
+            ? 'bg-[var(--radio-dot-surface)]'
+            : 'border-[length:var(--stroke-weight)] border-border-default bg-[var(--tile-surface)]',
         )}
       >
-        {selected && <span className="h-[6px] w-[6px] rounded-rounded bg-surface-default" />}
+        {selected && <span className="h-[6px] w-[6px] rounded-rounded bg-[var(--radio-dot-center)]" />}
       </span>
     </span>
   )
@@ -262,10 +335,10 @@ export function RadioTiles({ name, options, value, onChange, columns = 2, gap = 
           <div
             key={opt.value}
             className={cx(
-              'rounded-small bg-surface-default transition',
+              'rounded-small transition',
               selected
-                ? 'ring-[1.25px] ring-border-state-selected-default bg-surface-state-selected-brand'
-                : 'ring-[1.25px] ring-border-default hover:bg-surface-hover-default',
+                ? 'ring-[length:var(--stroke-weight)] ring-[var(--select-border-selected)] bg-[var(--select-tile-surface-selected)] text-[var(--select-tile-text-selected)]'
+                : 'ring-[length:var(--stroke-weight)] ring-[color:var(--tile-border)] bg-[var(--tile-surface)] hover:bg-[var(--tile-surface-hover)]',
             )}
           >
             <label className="group flex cursor-pointer items-center justify-between px-300 py-275 typography-label-emphasis-default">
@@ -302,10 +375,10 @@ export function SelectableGroup({ options, value, onChange, columns = 3, classNa
             type="button"
             onClick={() => onChange(opt.value)}
             className={cx(
-              'flex min-h-component-mediumButtons items-center justify-center rounded-small bg-surface-default px-350 typography-label-emphasis-default text-text-default transition',
+              'flex min-h-component-mediumButtons items-center justify-center rounded-small px-350 typography-label-emphasis-default transition',
               selected
-                ? 'ring-[1.25px] ring-inset ring-border-state-selected-default bg-surface-state-selected-brand'
-                : 'ring-[1.25px] ring-inset ring-border-default hover:bg-surface-hover-default hover:ring-[#403f3e]',
+                ? 'ring-[length:var(--stroke-weight)] ring-inset ring-[var(--select-border-selected)] bg-[var(--select-tile-surface-selected)] text-[var(--select-tile-text-selected)]'
+                : 'ring-[length:var(--stroke-weight)] ring-inset ring-[color:var(--tile-border)] bg-[var(--tile-surface)] text-text-default hover:bg-[var(--tile-surface-hover)]',
             )}
           >
             {opt.label}

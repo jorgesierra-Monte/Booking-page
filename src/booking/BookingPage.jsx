@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import { Avatar, Button, CircleCheck, Tag } from './ui'
+import { ColorSwitcher } from './ColorSwitcher'
 import {
   CancellationSection,
   ClientDetailsSection,
@@ -126,18 +127,29 @@ function StickyFooter({ schedule, apptLabel, enabled }) {
   )
 }
 
+/* Fresh default form state — used on load and to reset every component when the
+   color option changes (returns new Date objects each call). */
+const makeInitialState = () => ({
+  appointmentType: 'in-person',
+  billingType: 'insurance',
+  date: new Date(2023, 1, 7),
+  time: null,
+  estimated: false,
+  agree: { terms: false, sms: false },
+  address: PROVIDER_ADDRESS,
+  availableFrom: new Date(2023, 1, 1),
+})
+
+const THEME_STORAGE_KEY = 'booking-color-option'
+const applyTheme = theme => {
+  const root = document.documentElement
+  if (theme) root.dataset.theme = theme
+  else delete root.dataset.theme
+}
+
 /* ---------------- Page (app-shell layout) ---------------- */
 export default function BookingPage() {
-  const [state, setState] = useState({
-    appointmentType: 'in-person',
-    billingType: 'insurance',
-    date: new Date(2023, 1, 7),
-    time: null,
-    estimated: false,
-    agree: { terms: false, sms: false },
-    address: PROVIDER_ADDRESS,
-    availableFrom: new Date(2023, 1, 1),
-  })
+  const [state, setState] = useState(makeInitialState)
   const set = patch => setState(s => ({ ...s, ...patch }))
 
   const steps = useMemo(
@@ -152,6 +164,23 @@ export default function BookingPage() {
 
   const [activeIndex, setActiveIndex] = useState(0)
   const advance = () => setActiveIndex(i => Math.min(i + 1, steps.length - 1))
+
+  // Color-option (theme) ownership. Restore the saved option on mount, and on every
+  // switch reset all components to their default state so each option is compared fresh.
+  const [theme, setTheme] = useState(() =>
+    typeof window === 'undefined' ? null : localStorage.getItem(THEME_STORAGE_KEY) || null,
+  )
+  useEffect(() => {
+    applyTheme(theme)
+  }, [])
+  const selectTheme = next => {
+    setTheme(next)
+    applyTheme(next)
+    if (next) localStorage.setItem(THEME_STORAGE_KEY, next)
+    else localStorage.removeItem(THEME_STORAGE_KEY)
+    setState(makeInitialState())
+    setActiveIndex(0)
+  }
 
   // Auto-advance out of the date/time step once a slot is chosen.
   useEffect(() => {
@@ -188,6 +217,7 @@ export default function BookingPage() {
 
   return (
     <div className="min-h-svh bg-surface-default">
+      <ColorSwitcher active={theme} onSelect={selectTheme} />
       {/* Content fills at least the viewport so the footer sits below the fold —
           it's only revealed by scrolling to the very end of the page. */}
       <main

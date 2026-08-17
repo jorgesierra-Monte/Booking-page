@@ -139,8 +139,8 @@ export function ClientDetailsSection() {
             </div>
           </AddMoreLink>
           <TextField label="Client's email" type="email" placeholder="example@example.com" required />
-          <TextField label="Client's mobile phone number" placeholder="xxx-xxx-xxxx" inputMode="tel" required />
-          <TextField label="Client's date of birth (mm/dd/yyyy)" placeholder="mm/dd/yyyy" inputMode="numeric" required />
+          <TextField label="Client's mobile phone number" placeholder="xxx-xxx-xxxx" inputMode="tel" mask="phone" required />
+          <TextField label="Client's date of birth (mm/dd/yyyy)" placeholder="mm/dd/yyyy" inputMode="numeric" mask="date" required />
           <SelectField label="Client's sex listed on insurance" options={SEX_OPTIONS} required />
         </div>
       </div>
