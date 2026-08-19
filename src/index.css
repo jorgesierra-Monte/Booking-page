@@ -313,6 +313,80 @@
   --dropdown-row-text-selected: var(--text-default);
 }
 
+/* ---- Stroke + fill options ----
+   Filled (borderless) selectable buttons with Wilson/Frodo selected fills, but
+   text inputs keep their default STROKE (bordered) treatment (no --field-* overrides). */
+:root[data-theme="wilson750sf"] {
+  --select-tile-surface-selected: var(--wilson-750);
+  --select-tile-text-selected: var(--text-inverse);
+  --select-border-selected: transparent;
+  --radio-dot-surface: var(--surface-default);
+  --radio-dot-center: var(--wilson-750);
+  --day-surface-selected: var(--wilson-750);
+  --day-text-selected: var(--text-inverse);
+  --dropdown-row-surface-selected: var(--wilson-450); /* #e6e2de */
+  --dropdown-row-text-selected: var(--text-default);
+  --tile-surface: #f5f5f3;
+  --tile-surface-hover: #ebeae8;
+  --tile-border: transparent;
+}
+:root[data-theme="wilson850sf"] {
+  --select-tile-surface-selected: var(--wilson-850);
+  --select-tile-text-selected: var(--text-inverse);
+  --select-border-selected: transparent;
+  --radio-dot-surface: var(--surface-default);
+  --radio-dot-center: var(--wilson-850);
+  --day-surface-selected: var(--wilson-850);
+  --day-text-selected: var(--text-inverse);
+  --dropdown-row-surface-selected: var(--wilson-350); /* #ebe8e5 */
+  --dropdown-row-text-selected: var(--text-default);
+  --tile-surface: #f5f5f3;
+  --tile-surface-hover: #ebeae8;
+  --tile-border: transparent;
+}
+:root[data-theme="frodo400sf"] {
+  --select-tile-surface-selected: var(--frodo-400);
+  --select-tile-text-selected: var(--text-inverse);
+  --select-border-selected: transparent;
+  --radio-dot-surface: var(--surface-default);
+  --radio-dot-center: var(--frodo-400);
+  --day-surface-selected: var(--frodo-400);
+  --day-text-selected: var(--text-inverse);
+  --dropdown-row-surface-selected: #d8d6d1;
+  --dropdown-row-text-selected: var(--text-default);
+  --tile-surface: #f5f5f3;
+  --tile-surface-hover: #ebeae8;
+  --tile-border: transparent;
+}
+:root[data-theme="frodo500sf"] {
+  --select-tile-surface-selected: var(--frodo-500);
+  --select-tile-text-selected: var(--text-inverse);
+  --select-border-selected: transparent;
+  --radio-dot-surface: var(--surface-default);
+  --radio-dot-center: var(--frodo-500);
+  --day-surface-selected: var(--frodo-500);
+  --day-text-selected: var(--text-inverse);
+  --dropdown-row-surface-selected: #d8d6d1;
+  --dropdown-row-text-selected: var(--text-default);
+  --tile-surface: #f5f5f3;
+  --tile-surface-hover: #ebeae8;
+  --tile-border: transparent;
+}
+:root[data-theme="frodo600sf"] {
+  --select-tile-surface-selected: var(--frodo-600);
+  --select-tile-text-selected: var(--text-inverse);
+  --select-border-selected: transparent;
+  --radio-dot-surface: var(--surface-default);
+  --radio-dot-center: var(--frodo-600);
+  --day-surface-selected: var(--frodo-600);
+  --day-text-selected: var(--text-inverse);
+  --dropdown-row-surface-selected: #d8d6d1;
+  --dropdown-row-text-selected: var(--text-default);
+  --tile-surface: #f5f5f3;
+  --tile-surface-hover: #ebeae8;
+  --tile-border: transparent;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;

@@ -129,6 +129,7 @@ export function ClientDetailsSection() {
             value={relationship}
             onChange={setRelationship}
             options={RELATIONSHIP_OPTIONS}
+            className="mb-350 sm:mb-0"
           />
           <TextField label="Client's legal first name" placeholder="First name" required />
           <TextField label="Client's legal last name" placeholder="Last name" required />

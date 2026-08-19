@@ -66,6 +66,16 @@ const FAMILIES = [
       { label: 'Frodo 500', theme: 'frodo500wilson' },
     ],
   },
+  {
+    header: 'Stroke + fill',
+    options: [
+      { label: 'Wilson 750', theme: 'wilson750sf' },
+      { label: 'Wilson 850', theme: 'wilson850sf' },
+      { label: 'Frodo 400', theme: 'frodo400sf' },
+      { label: 'Frodo 500', theme: 'frodo500sf' },
+      { label: 'Frodo 600', theme: 'frodo600sf' },
+    ],
+  },
 ]
 
 const segItem = on =>
