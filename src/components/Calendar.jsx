@@ -108,7 +108,7 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
                     cellBase,
                     'rounded-small typography-label-default transition',
                     isSelected
-                      ? 'bg-[var(--day-surface-selected)] text-[var(--day-text-selected)] ring-[length:var(--stroke-weight)] ring-inset ring-[var(--select-border-selected)]'
+                      ? 'bg-[var(--day-surface-selected)] text-[var(--day-text-selected)] ring-[1.5px] ring-inset ring-[var(--select-border-selected)]'
                       : available
                         ? 'text-text-default hover:bg-[var(--tile-surface-hover)] active:bg-[#cac6c2]'
                         : 'text-text-muted opacity-50',

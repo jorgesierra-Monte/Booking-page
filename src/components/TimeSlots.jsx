@@ -33,7 +33,7 @@ export default function TimeSlots({ date, selected, onSelect }) {
               className={cx(
                 'flex min-h-component-mediumButtons w-full items-center justify-center rounded-small px-350 typography-label-emphasis-default transition',
                 isSelected
-                  ? 'ring-[length:var(--stroke-weight)] ring-inset ring-[var(--select-border-selected)] bg-[var(--select-tile-surface-selected)] text-[var(--select-tile-text-selected)]'
+                  ? 'ring-[1.5px] ring-inset ring-[var(--select-border-selected)] bg-[var(--select-tile-surface-selected)] text-[var(--select-tile-text-selected)]'
                   : 'ring-[length:var(--stroke-weight)] ring-inset ring-[color:var(--tile-border)] bg-[var(--tile-surface)] text-text-default hover:bg-[var(--tile-surface-hover)]',
               )}
             >
