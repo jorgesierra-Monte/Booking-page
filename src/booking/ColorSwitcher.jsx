@@ -15,6 +15,11 @@ const STROKE_OPTIONS = [
   { label: '1.25', value: '1.25px' },
   { label: '2', value: '2px' },
 ]
+const SELECTED_STROKE_OPTIONS = [
+  { label: '1', value: '1px' },
+  { label: '1.5', value: '1.5px' },
+  { label: '2', value: '2px' },
+]
 
 const DesktopIcon = () => (
   <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -84,7 +89,16 @@ const segItem = on =>
     on ? 'bg-action-primary-surface text-text-inverse' : 'text-text-default hover:bg-surface-hover-emphasis',
   )
 
-export function ColorSwitcher({ active = null, onSelect, stroke = '1px', onStroke, device = 'desktop', onDevice }) {
+export function ColorSwitcher({
+  active = null,
+  onSelect,
+  stroke = '1px',
+  onStroke,
+  strokeSelected = '1.5px',
+  onStrokeSelected,
+  device = 'desktop',
+  onDevice,
+}) {
   // Start collapsed only on small screens; desktop always shows the card.
   const [open, setOpen] = useState(
     () => typeof window === 'undefined' || !window.matchMedia('(max-width: 639px)').matches,
@@ -167,6 +181,24 @@ export function ColorSwitcher({ active = null, onSelect, stroke = '1px', onStrok
                 aria-pressed={stroke === o.value}
                 onClick={() => onStroke?.(o.value)}
                 className={cx(segItem(stroke === o.value), 'typography-label-small')}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Selected border — weight of the selected-state ring on selectable buttons. */}
+        <div className="flex flex-col gap-150">
+          <span className="text-center typography-label-emphasis-xsmall text-text-muted">Selected border</span>
+          <div className="flex gap-[2px] rounded-rounded bg-surface-subtle p-[3px]" role="group" aria-label="Selected border weight">
+            {SELECTED_STROKE_OPTIONS.map(o => (
+              <button
+                key={o.value}
+                type="button"
+                aria-pressed={strokeSelected === o.value}
+                onClick={() => onStrokeSelected?.(o.value)}
+                className={cx(segItem(strokeSelected === o.value), 'typography-label-small')}
               >
                 {o.label}
               </button>

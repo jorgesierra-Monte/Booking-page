@@ -130,8 +130,10 @@
   /* Border widths */
   --border-thin: 1.25px;
   --border-thick: 2px;
-  /* Toggleable stroke weight for radio/selectable/day/text-input borders (1/1.5/2px). */
+  /* Toggleable stroke weight for rest borders (radio/selectable/day/text inputs). */
   --stroke-weight: 1px;
+  /* Separate stroke weight for the SELECTED state of selectable buttons. */
+  --stroke-weight-selected: 1.5px;
 
   /* Fonts */
   --font-season: 'Season VF', system-ui, -apple-system, sans-serif;
