@@ -4,6 +4,13 @@ import { useEffect, useRef, useState } from 'react'
 
 const cx = (...c) => c.filter(Boolean).join(' ')
 
+// Shared press-state affordance: scales down while pressed, springs back on release.
+// Uses the brand entrance easing (--float-ease) at --press-duration; --press-scale is
+// driven live by the floating-nav "Press scale" control. Every target already has a bare
+// `transition` (whose property list includes transform), so the scale animates.
+export const PRESS =
+  'active:scale-[var(--press-scale)] duration-[var(--press-duration)] ease-[var(--float-ease)]'
+
 /* ---------------- Card ---------------- */
 export function Card({ className, children }) {
   return <div className={cx('w-full bg-surface-default', className)}>{children}</div>
@@ -20,7 +27,7 @@ export function Button({ use = 'primary', className, children, ...rest }) {
   const base = cx(
     'inline-flex items-center justify-center typography-label-emphasis-default transition disabled:cursor-not-allowed',
     // Arc Button V2: px-300 py-275. Links sit flush with no padding.
-    !isLink && 'px-300 py-275',
+    !isLink && cx('px-300 py-275', PRESS),
   )
   const uses = {
     // Arc Button V2 primary: fully-rounded pill, near-black surface, white text.
@@ -230,7 +237,7 @@ export function SelectField({ label, options = [], placeholder, required, option
     <div
       ref={ref}
       className={cx(
-        'relative w-full rounded-small ring-[length:var(--stroke-weight)] ring-inset transition bg-[var(--field-surface)]',
+        cx('relative w-full rounded-small ring-[length:var(--stroke-weight)] ring-inset transition bg-[var(--field-surface)]', PRESS),
         open
           ? 'ring-[color:var(--field-border-open)]'
           : 'ring-[color:var(--field-border)] [&:hover:not(:focus-within)]:bg-[var(--field-surface-hover)] [&:hover:not(:focus-within)]:ring-[color:var(--field-border-hover)]',
@@ -379,7 +386,7 @@ export function SelectableGroup({ options, value, onChange, columns = 3, classNa
             type="button"
             onClick={() => onChange(opt.value)}
             className={cx(
-              'flex min-h-component-mediumButtons items-center justify-center rounded-small px-350 typography-label-emphasis-default transition',
+              cx('flex min-h-component-mediumButtons items-center justify-center rounded-small px-350 typography-label-emphasis-default transition', PRESS),
               selected
                 ? 'ring-[length:var(--stroke-weight-selected)] ring-inset ring-[var(--select-border-selected)] bg-[var(--select-tile-surface-selected)] text-[var(--select-tile-text-selected)]'
                 : 'ring-[length:var(--stroke-weight)] ring-inset ring-[color:var(--tile-border)] bg-[var(--tile-surface)] text-text-default hover:bg-[var(--tile-surface-hover)]',

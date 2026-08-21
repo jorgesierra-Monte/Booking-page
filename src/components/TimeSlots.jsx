@@ -1,3 +1,5 @@
+import { PRESS } from '../booking/ui'
+
 const WEEKDAYS_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 const MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December']
@@ -31,7 +33,7 @@ export default function TimeSlots({ date, selected, onSelect }) {
               type="button"
               onClick={() => onSelect(slot)}
               className={cx(
-                'flex min-h-component-mediumButtons w-full items-center justify-center rounded-small px-350 typography-label-emphasis-default transition',
+                cx('flex min-h-component-mediumButtons w-full items-center justify-center rounded-small px-350 typography-label-emphasis-default transition', PRESS),
                 isSelected
                   ? 'ring-[length:var(--stroke-weight-selected)] ring-inset ring-[var(--select-border-selected)] bg-[var(--select-tile-surface-selected)] text-[var(--select-tile-text-selected)]'
                   : 'ring-[length:var(--stroke-weight)] ring-inset ring-[color:var(--tile-border)] bg-[var(--tile-surface)] text-text-default hover:bg-[var(--tile-surface-hover)]',

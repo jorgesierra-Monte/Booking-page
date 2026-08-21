@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { PRESS } from '../booking/ui'
+
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December']
 const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
@@ -64,13 +66,17 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
     view.getFullYear() > availableFrom.getFullYear() ||
     (view.getFullYear() === availableFrom.getFullYear() && view.getMonth() > availableFrom.getMonth())
 
-  const navBtn =
-    'flex items-center justify-center rounded-small p-100 text-text-default transition hover:bg-surface-hover-default disabled:opacity-30 disabled:hover:bg-transparent'
-  // 44px cells, packed (matches Arc BETA Date picker V2)
+  // 44px hit area so the arrows sit in the first/last day-column slots (aligned with the S columns).
+  const navBtn = cx(
+    'flex size-11 items-center justify-center rounded-small text-text-default transition hover:bg-surface-hover-default disabled:opacity-30 disabled:hover:bg-transparent',
+    PRESS,
+  )
+  // 44px cells (Arc BETA Date picker V2). Calendar fills the column width on all
+  // breakpoints; cells spread edge-to-edge (justify-between) across the 7 columns.
   const cellBase = 'flex size-11 items-center justify-center'
 
   return (
-    <div className="w-full select-none sm:w-fit">
+    <div className="w-full select-none">
       <div className="mb-200 flex items-center justify-between gap-200">
         <button type="button" className={navBtn} onClick={() => step(-1)} disabled={!canGoPrev} aria-label="Previous month">
           <Chevron dir="prev" />
@@ -83,7 +89,7 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
         </button>
       </div>
 
-      <div className="flex justify-between sm:justify-start">
+      <div className="flex justify-between">
         {WEEKDAYS.map((w, i) => (
           <span key={i} className={cx(cellBase, 'typography-label-emphasis-default text-text-default')}>
             {w}
@@ -93,7 +99,7 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
 
       <div className="flex flex-col gap-100">
         {weeks.map((week, wi) => (
-          <div key={wi} className="flex justify-between sm:justify-start">
+          <div key={wi} className="flex justify-between">
             {week.map((cell, ci) => {
               if (!cell.inMonth) return <span key={ci} className="size-11" />
               const available = isAvailable(cell)
@@ -107,11 +113,12 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
                   className={cx(
                     cellBase,
                     'rounded-small typography-label-default transition',
+                    PRESS,
                     isSelected
                       ? 'bg-[var(--day-surface-selected)] text-[var(--day-text-selected)] ring-[length:var(--stroke-weight-selected)] ring-inset ring-[var(--select-border-selected)]'
                       : available
-                        ? 'text-text-default hover:bg-[var(--tile-surface-hover)] active:bg-[#cac6c2]'
-                        : 'text-text-muted opacity-50',
+                        ? 'text-text-default hover:bg-[var(--tile-surface-hover)]'
+                        : 'text-[#313132] opacity-50',
                   )}
                 >
                   {cell.date.getDate()}

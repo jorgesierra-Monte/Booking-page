@@ -126,6 +126,9 @@ export default {
         '.typography-label-small': {
           fontFamily: sans, fontSize: '14px', lineHeight: '14px', fontWeight: '450',
         },
+        '.typography-label-emphasis-small': {
+          fontFamily: sans, fontSize: '14px', lineHeight: '14px', fontWeight: '550',
+        },
         '.typography-label-emphasis-xsmall': {
           fontFamily: sans, fontSize: '12px', lineHeight: '12px', fontWeight: '550',
         },

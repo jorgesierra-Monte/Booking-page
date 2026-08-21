@@ -143,6 +143,7 @@ const makeInitialState = () => ({
 const THEME_STORAGE_KEY = 'booking-color-option'
 const STROKE_STORAGE_KEY = 'booking-stroke-weight'
 const STROKE_SELECTED_STORAGE_KEY = 'booking-stroke-weight-selected'
+const PRESS_SCALE_STORAGE_KEY = 'booking-press-scale'
 const DEVICE_STORAGE_KEY = 'booking-device'
 
 const applyTheme = theme => {
@@ -152,6 +153,7 @@ const applyTheme = theme => {
 }
 const applyStroke = v => document.documentElement.style.setProperty('--stroke-weight', v)
 const applyStrokeSelected = v => document.documentElement.style.setProperty('--stroke-weight-selected', v)
+const applyPressScale = v => document.documentElement.style.setProperty('--press-scale', v)
 
 // Rendered inside the switcher's "mobile" device mode: the same app loaded in a
 // phone-width iframe (?embed=1) so the real `sm:` breakpoints resolve to mobile.
@@ -196,6 +198,7 @@ export default function BookingPage() {
   const [theme, setTheme] = useState(() => read(THEME_STORAGE_KEY, null) || null)
   const [stroke, setStroke] = useState(() => read(STROKE_STORAGE_KEY, '1px'))
   const [strokeSelected, setStrokeSelected] = useState(() => read(STROKE_SELECTED_STORAGE_KEY, '1.5px'))
+  const [pressScale, setPressScale] = useState(() => read(PRESS_SCALE_STORAGE_KEY, '0.97'))
   // Device only drives the outer preview; inside the embed iframe it's forced desktop.
   const [device, setDevice] = useState(() => (isEmbed ? 'desktop' : read(DEVICE_STORAGE_KEY, 'desktop')))
 
@@ -204,6 +207,7 @@ export default function BookingPage() {
     applyTheme(theme)
     applyStroke(stroke)
     applyStrokeSelected(strokeSelected)
+    applyPressScale(pressScale)
     // Inside the mobile-preview iframe: hide the page scrollbar so content fills edge-to-edge.
     if (isEmbed) document.documentElement.dataset.embed = 'true'
   }, [])
@@ -225,6 +229,11 @@ export default function BookingPage() {
     setStrokeSelected(value)
     applyStrokeSelected(value)
     localStorage.setItem(STROKE_SELECTED_STORAGE_KEY, value)
+  }
+  const selectPressScale = value => {
+    setPressScale(value)
+    applyPressScale(value)
+    localStorage.setItem(PRESS_SCALE_STORAGE_KEY, value)
   }
   const selectDevice = value => {
     setDevice(value)
@@ -321,11 +330,13 @@ export default function BookingPage() {
         onStroke={selectStroke}
         strokeSelected={strokeSelected}
         onStrokeSelected={selectStrokeSelected}
+        pressScale={pressScale}
+        onPressScale={selectPressScale}
         device={device}
         onDevice={selectDevice}
       />
       {device === 'mobile' ? (
-        <MobilePreview reloadKey={`${theme ?? 'current'}|${stroke}|${strokeSelected}`} />
+        <MobilePreview reloadKey={`${theme ?? 'current'}|${stroke}|${strokeSelected}|${pressScale}`} />
       ) : (
         page
       )}

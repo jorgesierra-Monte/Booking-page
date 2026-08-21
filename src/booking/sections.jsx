@@ -66,7 +66,7 @@ export function DateTimeSection({ state, set }) {
         ]}
         className="mb-650"
       />
-      <div className="flex flex-col gap-350 sm:flex-row sm:gap-x-450">
+      <div className="flex flex-col gap-350 sm:flex-row sm:gap-x-200">
         <div className="sm:min-w-0 sm:flex-1">
           <p className="mb-250 typography-label-emphasis-default text-text-default">Select a day *</p>
           <Calendar

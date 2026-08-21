@@ -20,6 +20,12 @@ const SELECTED_STROKE_OPTIONS = [
   { label: '1.5', value: '1.5px' },
   { label: '2', value: '2px' },
 ]
+const PRESS_SCALE_OPTIONS = [
+  { label: '0.7', value: '0.993' },
+  { label: '1', value: '0.99' },
+  { label: '1.5', value: '0.985' },
+  { label: '3', value: '0.97' },
+]
 
 const DesktopIcon = () => (
   <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -85,7 +91,7 @@ const FAMILIES = [
 
 const segItem = on =>
   cx(
-    'flex h-[30px] flex-1 items-center justify-center rounded-rounded transition-colors',
+    'flex size-[32px] shrink-0 items-center justify-center whitespace-nowrap rounded-rounded transition-colors',
     on ? 'bg-action-primary-surface text-text-inverse' : 'text-text-default hover:bg-surface-hover-emphasis',
   )
 
@@ -96,9 +102,17 @@ export function ColorSwitcher({
   onStroke,
   strokeSelected = '1.5px',
   onStrokeSelected,
+  pressScale = '0.97',
+  onPressScale,
   device = 'desktop',
   onDevice,
 }) {
+  // Family groups start collapsed; the group holding the active option auto-expands.
+  const activeHeader = FAMILIES.find(f => f.options.some(o => o.theme === active))?.header
+  const [collapsed, setCollapsed] = useState(() =>
+    Object.fromEntries(FAMILIES.filter(f => f.header).map(f => [f.header, f.header !== activeHeader])),
+  )
+  const toggle = h => setCollapsed(c => ({ ...c, [h]: !c[h] }))
   // Start collapsed only on small screens; desktop always shows the card.
   const [open, setOpen] = useState(
     () => typeof window === 'undefined' || !window.matchMedia('(max-width: 639px)').matches,
@@ -123,7 +137,7 @@ export function ColorSwitcher({
       {/* Card — always visible on desktop; on mobile only when open. */}
       <div
         className={cx(
-          'fixed left-4 top-1/2 z-[60] max-h-[calc(100svh-32px)] w-[131px] -translate-y-1/2 flex-col gap-450 overflow-y-auto rounded-medium border border-border-subtle bg-surface-default px-[13px] py-[21px] shadow-[0_4px_16px_rgba(1,2,4,0.08)] sm:flex',
+          'fixed left-4 top-1/2 z-[60] max-h-[calc(100svh-32px)] w-[168px] -translate-y-1/2 flex-col gap-450 overflow-y-auto rounded-medium border border-border-subtle bg-surface-default px-[13px] py-[21px] shadow-[0_4px_16px_rgba(1,2,4,0.08)] sm:flex',
           open ? 'flex' : 'hidden',
         )}
         role="group"
@@ -141,46 +155,64 @@ export function ColorSwitcher({
           </svg>
         </button>
 
-        {FAMILIES.map((family, fi) => (
-          <div key={family.header ?? `group-${fi}`} className="flex flex-col gap-150">
-            {family.header && (
-              <span className="text-center typography-label-emphasis-xsmall text-text-muted">
-                {family.header}
-              </span>
-            )}
-            {family.options.map(opt => {
-              const isActive = active === opt.theme
-              return (
+        {FAMILIES.map((family, fi) => {
+          const isCollapsed = family.header && collapsed[family.header]
+          return (
+            <div key={family.header ?? `group-${fi}`} className="flex flex-col gap-150">
+              {family.header && (
                 <button
-                  key={opt.label}
                   type="button"
-                  aria-pressed={isActive}
-                  onClick={() => onSelect?.(opt.theme)}
-                  className={cx(
-                    'flex h-[38px] items-center justify-center whitespace-nowrap rounded-rounded px-150 typography-label-small transition-colors',
-                    isActive
-                      ? 'bg-action-primary-surface text-text-inverse'
-                      : 'bg-surface-subtle text-text-default hover:bg-surface-hover-emphasis',
-                  )}
+                  onClick={() => toggle(family.header)}
+                  aria-expanded={!isCollapsed}
+                  className="flex w-full items-center justify-center gap-100 py-[2px] typography-label-emphasis-xsmall text-text-muted"
                 >
-                  {opt.label}
+                  {family.header}
+                  {/* Chevron sits 4px right of the label; points down when collapsed, up when open. */}
+                  <svg
+                    viewBox="0 0 16 16"
+                    className={cx('h-3.5 w-3.5 shrink-0 transition-transform', !isCollapsed && 'rotate-180')}
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </button>
-              )
-            })}
-          </div>
-        ))}
+              )}
+              {!isCollapsed &&
+                family.options.map(opt => {
+                  const isActive = active === opt.theme
+                  return (
+                    <button
+                      key={opt.label}
+                      type="button"
+                      aria-pressed={isActive}
+                      onClick={() => onSelect?.(opt.theme)}
+                      className={cx(
+                        'flex h-[38px] items-center justify-center whitespace-nowrap rounded-rounded px-150 typography-label-emphasis-small transition-colors',
+                        isActive
+                          ? 'bg-action-primary-surface text-text-inverse'
+                          : 'bg-surface-subtle text-text-default hover:bg-surface-hover-emphasis',
+                      )}
+                    >
+                      {opt.label}
+                    </button>
+                  )
+                })}
+            </div>
+          )
+        })}
 
         {/* Border weight — segmented toggle (1 / 1.25 / 2 px). */}
         <div className="flex flex-col gap-150">
           <span className="text-center typography-label-emphasis-xsmall text-text-muted">Border weight</span>
-          <div className="flex gap-[2px] rounded-rounded bg-surface-subtle p-[3px]" role="group" aria-label="Border weight">
+          <div className="flex w-fit gap-[2px] self-center rounded-rounded bg-surface-subtle p-[3px]" role="group" aria-label="Border weight">
             {STROKE_OPTIONS.map(o => (
               <button
                 key={o.value}
                 type="button"
                 aria-pressed={stroke === o.value}
                 onClick={() => onStroke?.(o.value)}
-                className={cx(segItem(stroke === o.value), 'typography-label-small')}
+                className={cx(segItem(stroke === o.value), 'typography-label-emphasis-small')}
               >
                 {o.label}
               </button>
@@ -191,14 +223,32 @@ export function ColorSwitcher({
         {/* Selected border — weight of the selected-state ring on selectable buttons. */}
         <div className="flex flex-col gap-150">
           <span className="text-center typography-label-emphasis-xsmall text-text-muted">Selected border</span>
-          <div className="flex gap-[2px] rounded-rounded bg-surface-subtle p-[3px]" role="group" aria-label="Selected border weight">
+          <div className="flex w-fit gap-[2px] self-center rounded-rounded bg-surface-subtle p-[3px]" role="group" aria-label="Selected border weight">
             {SELECTED_STROKE_OPTIONS.map(o => (
               <button
                 key={o.value}
                 type="button"
                 aria-pressed={strokeSelected === o.value}
                 onClick={() => onStrokeSelected?.(o.value)}
-                className={cx(segItem(strokeSelected === o.value), 'typography-label-small')}
+                className={cx(segItem(strokeSelected === o.value), 'typography-label-emphasis-small')}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Press scale — how far buttons scale down while pressed (1 / 3 / 5%). */}
+        <div className="flex flex-col gap-150">
+          <span className="text-center typography-label-emphasis-xsmall text-text-muted">Press scale (%)</span>
+          <div className="flex w-fit gap-[2px] self-center rounded-rounded bg-surface-subtle p-[3px]" role="group" aria-label="Press scale">
+            {PRESS_SCALE_OPTIONS.map(o => (
+              <button
+                key={o.value}
+                type="button"
+                aria-pressed={pressScale === o.value}
+                onClick={() => onPressScale?.(o.value)}
+                className={cx(segItem(pressScale === o.value), 'typography-label-emphasis-small')}
               >
                 {o.label}
               </button>
@@ -209,7 +259,7 @@ export function ColorSwitcher({
         {/* Device — icon segmented toggle (desktop / mobile). */}
         <div className="flex flex-col gap-150">
           <span className="text-center typography-label-emphasis-xsmall text-text-muted">Device</span>
-          <div className="flex gap-[2px] rounded-rounded bg-surface-subtle p-[3px]" role="group" aria-label="Device">
+          <div className="flex w-fit gap-[2px] self-center rounded-rounded bg-surface-subtle p-[3px]" role="group" aria-label="Device">
             {DEVICE_OPTIONS.map(({ value, label, Icon }) => (
               <button
                 key={value}
