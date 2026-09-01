@@ -408,8 +408,8 @@
   --select-border-selected: transparent; /* no border */
   --day-surface-selected: var(--neo-500);
   --day-text-selected: var(--text-inverse);
-  /* Radio buttons: white fill, black border, default black/white dot */
-  --radio-surface-selected: var(--surface-default);
+  /* Radio buttons: Wilson fill (as in Current), black border, default black/white dot */
+  --radio-surface-selected: var(--surface-selected-brand); /* wilson #f1efec */
   --radio-text-selected: var(--text-default);
   --radio-border-selected: var(--neo-500); /* #010204 black border */
 }
