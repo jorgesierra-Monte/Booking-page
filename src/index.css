@@ -78,9 +78,15 @@
   /* ---- Selected-state role tokens (color-switcher) ----
      Defaults reproduce the current design exactly. Each [data-theme] block
      below overrides only these to compare color options. */
-  --select-tile-surface-selected: var(--surface-selected-brand); /* radio + selectable fill */
+  --select-tile-surface-selected: var(--surface-selected-brand); /* selectable + timeslot fill */
   --select-tile-text-selected: var(--text-default);
-  --select-border-selected: var(--border-selected-default); /* frodo ring on radio/selectable/timeslot/day */
+  --select-border-selected: var(--border-selected-default); /* frodo ring on selectable/timeslot/day */
+  /* Radio tiles get their own selected-state tokens (default = the shared select
+     tokens, so existing options are unchanged). A theme can style radios apart from
+     the selectable/day tiles — e.g. white fill + black border. */
+  --radio-surface-selected: var(--select-tile-surface-selected);
+  --radio-text-selected: var(--select-tile-text-selected);
+  --radio-border-selected: var(--select-border-selected);
   --radio-dot-surface: var(--surface-inverse);
   --radio-dot-center: var(--surface-default);
   --day-surface-selected: var(--surface-selected-brand); /* #f1efec + frodo ring */
@@ -390,6 +396,22 @@
   --tile-surface: #f5f5f3;
   --tile-surface-hover: #ebeae8;
   --tile-border: transparent;
+}
+
+/* ---- Filled selected states ----
+   Toggle (selectable) buttons + day selector: solid black fill, no border, white
+   text. Radio buttons stay white-filled but flip their selected border to black. */
+:root[data-theme="blackfill"] {
+  /* Selectable buttons + time slots + day selector */
+  --select-tile-surface-selected: var(--neo-500); /* #010204 black */
+  --select-tile-text-selected: var(--text-inverse);
+  --select-border-selected: transparent; /* no border */
+  --day-surface-selected: var(--neo-500);
+  --day-text-selected: var(--text-inverse);
+  /* Radio buttons: white fill, black border, default black/white dot */
+  --radio-surface-selected: var(--surface-default);
+  --radio-text-selected: var(--text-default);
+  --radio-border-selected: var(--neo-500); /* #010204 black border */
 }
 
 *, *::before, *::after {

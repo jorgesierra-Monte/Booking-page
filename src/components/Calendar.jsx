@@ -109,7 +109,7 @@ export default function Calendar({ selected, onSelect, availableFrom }) {
                   key={ci}
                   type="button"
                   disabled={!available}
-                  onClick={() => available && onSelect(cell.date)}
+                  onClick={() => available && onSelect(isSelected ? null : cell.date)}
                   className={cx(
                     cellBase,
                     'rounded-small typography-label-default transition',

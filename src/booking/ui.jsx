@@ -237,7 +237,7 @@ export function SelectField({ label, options = [], placeholder, required, option
     <div
       ref={ref}
       className={cx(
-        cx('relative w-full rounded-small ring-[length:var(--stroke-weight)] ring-inset transition bg-[var(--field-surface)]', PRESS),
+        'relative w-full rounded-small ring-[length:var(--stroke-weight)] ring-inset transition bg-[var(--field-surface)]',
         open
           ? 'ring-[color:var(--field-border-open)]'
           : 'ring-[color:var(--field-border)] [&:hover:not(:focus-within)]:bg-[var(--field-surface-hover)] [&:hover:not(:focus-within)]:ring-[color:var(--field-border-hover)]',
@@ -346,7 +346,7 @@ export function RadioTiles({ name, options, value, onChange, columns = 2, gap = 
             className={cx(
               'rounded-small transition',
               selected
-                ? 'ring-[length:var(--stroke-weight-selected)] ring-[var(--select-border-selected)] bg-[var(--select-tile-surface-selected)] text-[var(--select-tile-text-selected)]'
+                ? 'ring-[length:var(--stroke-weight-selected)] ring-[var(--radio-border-selected)] bg-[var(--radio-surface-selected)] text-[var(--radio-text-selected)]'
                 : 'ring-[length:var(--stroke-weight)] ring-[color:var(--tile-border)] bg-[var(--tile-surface)] hover:bg-[var(--tile-surface-hover)]',
             )}
           >
@@ -386,7 +386,8 @@ export function SelectableGroup({ options, value, onChange, columns = 3, classNa
             type="button"
             onClick={() => onChange(opt.value)}
             className={cx(
-              cx('flex min-h-component-mediumButtons items-center justify-center rounded-small px-350 typography-label-emphasis-default transition', PRESS),
+              'flex min-h-component-mediumButtons items-center justify-center rounded-small px-350 typography-label-emphasis-default transition',
+              PRESS,
               selected
                 ? 'ring-[length:var(--stroke-weight-selected)] ring-inset ring-[var(--select-border-selected)] bg-[var(--select-tile-surface-selected)] text-[var(--select-tile-text-selected)]'
                 : 'ring-[length:var(--stroke-weight)] ring-inset ring-[color:var(--tile-border)] bg-[var(--tile-surface)] text-text-default hover:bg-[var(--tile-surface-hover)]',

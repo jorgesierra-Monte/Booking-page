@@ -87,6 +87,10 @@ const FAMILIES = [
       { label: 'Frodo 600', theme: 'frodo600sf' },
     ],
   },
+  {
+    header: 'Filled selected states',
+    options: [{ label: 'Neo 1000', theme: 'blackfill' }],
+  },
 ]
 
 const segItem = on =>
@@ -188,7 +192,7 @@ export function ColorSwitcher({
                       aria-pressed={isActive}
                       onClick={() => onSelect?.(opt.theme)}
                       className={cx(
-                        'flex h-[38px] items-center justify-center whitespace-nowrap rounded-rounded px-150 typography-label-emphasis-small transition-colors',
+                        'flex h-[38px] items-center justify-center whitespace-nowrap rounded-rounded px-150 typography-label-emphasis-xsmall transition-colors',
                         isActive
                           ? 'bg-action-primary-surface text-text-inverse'
                           : 'bg-surface-subtle text-text-default hover:bg-surface-hover-emphasis',
@@ -212,7 +216,7 @@ export function ColorSwitcher({
                 type="button"
                 aria-pressed={stroke === o.value}
                 onClick={() => onStroke?.(o.value)}
-                className={cx(segItem(stroke === o.value), 'typography-label-emphasis-small')}
+                className={cx(segItem(stroke === o.value), 'typography-label-emphasis-xsmall')}
               >
                 {o.label}
               </button>
@@ -230,7 +234,7 @@ export function ColorSwitcher({
                 type="button"
                 aria-pressed={strokeSelected === o.value}
                 onClick={() => onStrokeSelected?.(o.value)}
-                className={cx(segItem(strokeSelected === o.value), 'typography-label-emphasis-small')}
+                className={cx(segItem(strokeSelected === o.value), 'typography-label-emphasis-xsmall')}
               >
                 {o.label}
               </button>
@@ -248,7 +252,7 @@ export function ColorSwitcher({
                 type="button"
                 aria-pressed={pressScale === o.value}
                 onClick={() => onPressScale?.(o.value)}
-                className={cx(segItem(pressScale === o.value), 'typography-label-emphasis-small')}
+                className={cx(segItem(pressScale === o.value), 'typography-label-emphasis-xsmall')}
               >
                 {o.label}
               </button>
