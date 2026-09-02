@@ -50,7 +50,9 @@ export function Tag({ children, className }) {
   return (
     <span
       className={cx(
-        'inline-flex items-center gap-x-100 rounded-rounded bg-surface-emphasis px-200 py-100 typography-eyebrow-default text-text-default',
+        // Arc BETA Tag V2 · "Subtle - Status": 4px radius, subtle wilson-500 fill
+        // (#e3dfda), 4px/8px padding, 2px icon gap, no border.
+        'inline-flex items-center gap-x-50 rounded-xsmall bg-[#e3dfda] pl-100 pr-150 py-100 typography-eyebrow-default text-text-default',
         className,
       )}
     >
@@ -70,6 +72,17 @@ export function CircleCheck({ className }) {
     >
       <Check className="h-[9px] w-[9px]" />
     </span>
+  )
+}
+
+/* ---------------- Unfilled circle-check (verified badge, outline) ----------------
+   Stroked circle + check, no fill; inherits currentColor (icon/default #010204). */
+export function CircleCheckOutline({ className }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" className={cx('shrink-0', className)} aria-hidden="true">
+      <circle cx="8" cy="8" r="6.25" stroke="currentColor" strokeWidth="1.25" />
+      <path d="M5.4 8.1L7 9.7L10.6 6.1" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   )
 }
 

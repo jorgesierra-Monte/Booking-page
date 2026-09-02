@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import { Avatar, Button, CircleCheck, Tag } from './ui'
+import { Avatar, Button, CircleCheckOutline, Tag } from './ui'
 import { ColorSwitcher } from './ColorSwitcher'
 import {
   CancellationSection,
@@ -32,7 +32,7 @@ function BookingPageHeader() {
               <span className="typography-body-small text-text-muted">(he/him)</span>
             </div>
             <Tag className="my-2 self-start">
-              <CircleCheck className="h-4 w-4" /> Grow Verified
+              <CircleCheckOutline className="h-4 w-4" /> Grow Verified
             </Tag>
             <a href="#" className="typography-label-small block max-w-fit text-text-default underline underline-offset-4">
               View profile
