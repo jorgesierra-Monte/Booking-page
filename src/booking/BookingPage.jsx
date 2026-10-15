@@ -140,6 +140,17 @@ const makeInitialState = () => ({
   availableFrom: new Date(2023, 1, 1),
 })
 
+// Explore-drawer themes. The shipped design is the base (no theme); anything else
+// persisted (e.g. the retired "blackfill") is coerced back to the current design.
+const EXPLORE_THEMES = new Set([
+  'original',
+  'wilson750', 'wilson850',
+  'frodo400', 'frodo500', 'frodo600',
+  'frodo400filled', 'frodo500filled',
+  'frodo400wilson', 'frodo500wilson',
+  'wilson750sf', 'wilson850sf', 'frodo400sf', 'frodo500sf', 'frodo600sf',
+])
+
 const THEME_STORAGE_KEY = 'booking-color-option'
 const STROKE_STORAGE_KEY = 'booking-stroke-weight'
 const STROKE_SELECTED_STORAGE_KEY = 'booking-stroke-weight-selected'
@@ -195,10 +206,13 @@ export default function BookingPage() {
   const isEmbed = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('embed')
   const read = (key, fallback) => (typeof window === 'undefined' ? fallback : localStorage.getItem(key) || fallback)
 
-  const [theme, setTheme] = useState(() => read(THEME_STORAGE_KEY, null) || null)
+  const [theme, setTheme] = useState(() => {
+    const t = read(THEME_STORAGE_KEY, null)
+    return t && EXPLORE_THEMES.has(t) ? t : null
+  })
   const [stroke, setStroke] = useState(() => read(STROKE_STORAGE_KEY, '1px'))
   const [strokeSelected, setStrokeSelected] = useState(() => read(STROKE_SELECTED_STORAGE_KEY, '1.5px'))
-  const [pressScale, setPressScale] = useState(() => read(PRESS_SCALE_STORAGE_KEY, '0.97'))
+  const [pressScale, setPressScale] = useState(() => read(PRESS_SCALE_STORAGE_KEY, '0.99'))
   // Device only drives the outer preview; inside the embed iframe it's forced desktop.
   const [device, setDevice] = useState(() => (isEmbed ? 'desktop' : read(DEVICE_STORAGE_KEY, 'desktop')))
 
